@@ -1,0 +1,38 @@
+.container{
+    height: 50px;
+    display: flex;
+    width: 100%;
+    .lineId{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 5%;
+        border-bottom: 1px solid black;
+    }
+    .lineTime{
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+        border-top: none;
+    }
+
+    .lineNum{
+        width: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+        border-top: none;
+        border-left: none;
+    }
+
+    .lineName{
+        width: 45%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid black;
+    }
+}

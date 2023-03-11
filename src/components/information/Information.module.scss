@@ -1,0 +1,16 @@
+.container{
+    .content{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .time{
+            margin-left: 10%;
+        }
+        .content_line{
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            column-gap: 30px;
+        }
+    }
+}
