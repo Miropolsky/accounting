@@ -1,10 +1,14 @@
 .container{
     .content{
-        margin-top: 3%;
+        margin-top: 1%;
         display: flex;
         flex-direction: column;
         >div:nth-child(1){
-            border-top: 1px solid black;
+            // border-top: 1px solid black;
+            background-color: rgb(60, 146, 228);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
         }
     }
 }

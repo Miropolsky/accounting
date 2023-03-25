@@ -1,16 +1,13 @@
 import { connect } from 'react-redux';
 import Table from './Table';
+import { textFilter } from '../../redux/informationReducer';
 
 const mapStateToProps = (state) => {
     return {
-        tableList: state.tablePage.tableList,
+        tableList: state.informationPage.filterList,
     };
 };
 
-const mapDistpatchToProps = (dispatch) => {
-    return {};
-};
-
-const TableContainer = connect(mapStateToProps, mapDistpatchToProps)(Table);
+const TableContainer = connect(mapStateToProps, { textFilter })(Table);
 
 export default TableContainer;
