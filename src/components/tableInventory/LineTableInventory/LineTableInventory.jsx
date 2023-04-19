@@ -1,28 +1,26 @@
 import { useState } from 'react';
-import styles from './LineTable.module.scss';
+import styles from './LineTableInventory.module.scss';
 
-export default function LineTable(props) {
+export default function LineTableInventory(props) {
     const [isChoose, setIsChoose] = useState(false);
     const [reverseId, setReverseId] = useState(false);
-    const [reverseDate, setReverseDate] = useState(false);
     const [reverseNum, setReverseNum] = useState(false);
     const [reverseName, setReverseName] = useState(false);
+
     const toggleChoose = () => {
         setIsChoose(!isChoose);
+        if (!isChoose && props.setChoosePerson) {
+            props.setChoosePerson(props.el);
+        } else if (props.setChoosePerson) {
+            props.setChoosePerson(null);
+        }
     };
 
     return (
         <div
-            onDoubleClick={() => props.openCard(props.id)}
             onClick={toggleChoose}
             className={`${styles.container} ${
-                isChoose
-                    ? styles.containerChoose
-                    : props.isTimeOver
-                    ? props.isMountain
-                        ? styles.containerRed
-                        : styles.containerYellow
-                    : null
+                isChoose && styles.containerChoose
             }`}
         >
             {props.titleSortList ? (
@@ -37,14 +35,14 @@ export default function LineTable(props) {
                             {props.id}
                         </span>
                     </div>
-                    <div className={styles.lineTime}>
+                    <div className={styles.lineName}>
                         <span
                             onClick={() => {
-                                props.titleSortList('date', reverseDate);
-                                setReverseDate(!reverseDate);
+                                props.titleSortList('name', reverseName);
+                                setReverseName(!reverseName);
                             }}
                         >
-                            {props.time}
+                            {props.name}
                         </span>
                     </div>
                     <div className={styles.lineNum}>
@@ -57,23 +55,25 @@ export default function LineTable(props) {
                             {props.num}
                         </span>
                     </div>
-                    <div className={styles.lineName}>
-                        <span
-                            onClick={() => {
-                                props.titleSortList('name', reverseName);
-                                setReverseName(!reverseName);
-                            }}
-                        >
-                            {props.name}
-                        </span>
-                    </div>
                 </>
             ) : (
                 <>
                     <div className={styles.lineId}>{props.id}</div>
-                    <div className={styles.lineTime}>{props.time}</div>
-                    <div className={styles.lineNum}>{props.num}</div>
                     <div className={styles.lineName}>{props.name}</div>
+                    <div className={styles.lineNum}>
+                        {props.inventory.map((el, i) => {
+                            let probel = '';
+                            if (i !== props.inventory.length - 1) {
+                                probel = ', ';
+                            }
+                            return (
+                                <div
+                                    className={styles.inventoryName}
+                                    key={i}
+                                >{`${el.nameInventory} №${el.numInventory}${probel}`}</div>
+                            );
+                        })}
+                    </div>
                 </>
             )}
         </div>

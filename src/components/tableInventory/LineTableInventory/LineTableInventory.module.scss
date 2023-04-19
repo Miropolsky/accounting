@@ -7,58 +7,40 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 5%;
+        width: 6%;
         border-bottom: 1px solid black;
         span{
             cursor: pointer;
         }
     }
-    .lineTime{
-        width: 20%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid black;
-        border-top: none;
-        span{
-            cursor: pointer;
-        }
-        
-    }
     
     .lineNum{
-        width: 30%;
+        width: 59%;
         display: flex;
         align-items: center;
         justify-content: center;
         border: 1px solid black;
         border-top: none;
-        border-left: none;
         span{
             cursor: pointer;
         }
     }
     
     .lineName{
-        width: 45%;
+        width: 35%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom: 1px solid black;
+        border: 1px solid black;
+        border-top: none;
+        border-right: none;
         span{
             cursor: pointer;
         }
     }
-}
-
-
-
-.containerRed{
-    background-color: rgb(249, 155, 155);
-}
-
-.containerYellow{
-    background-color: rgb(241, 241, 160);
+    .inventoryName{
+        margin-left: 5px;
+    }
 }
 
 .containerChoose{
