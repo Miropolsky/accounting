@@ -9,11 +9,14 @@ const CardInventory = (props) => {
         alert('Успешная выдача');
         props.closeCard();
     };
-    const [assignedPerson, setAssignedPerson] = useState(true);
+    const [assignedPerson, setAssignedPerson] = useState(false);
     const [isFullComplect, setIsFullComplect] = useState(false);
     useEffect(() => {
-        setAssignedPerson(true);
-        setTimeout(() => setIsFullComplect(true), 5000);
+        // setAssignedPerson(true);
+        setTimeout(() => {
+            setAssignedPerson(true);
+            setIsFullComplect(true);
+        }, 5000);
     }, []);
     const exchange = () => {
         navigate('/inventory');

@@ -16,12 +16,21 @@ export default function Table(props) {
     const [isCardInventory, setIsCardInventory] = useState(false);
     const [idCard, setIdCard] = useState(null);
 
+    const setChoose = (id) => {
+        if (idCard === id) {
+            setIdCard(null);
+        } else {
+            setIdCard(id);
+        }
+    };
+
     const openCardPerson = (id) => {
         setIdCard(id);
         setIsCardPerson(true);
     };
     const closeCardPerson = (id) => {
         setIsCardPerson(false);
+        setIdCard(null);
     };
     const closeCardInventory = (id) => {
         setIsCardInventory(false);
@@ -52,6 +61,8 @@ export default function Table(props) {
                 {props.tableList.map((el) => {
                     return (
                         <LineTable
+                            setChoose={setChoose}
+                            isChoose={idCard && idCard === el.id}
                             openCard={openCardPerson}
                             key={el.id}
                             id={el.id}

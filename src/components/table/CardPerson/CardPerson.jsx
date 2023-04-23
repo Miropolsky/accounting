@@ -25,7 +25,15 @@ const CardPerson = (props) => {
                 </div>
                 <div className={styles.valuesInfo}>
                     <div className={styles.valueInfo}>{props.person.num}</div>
-                    <div className={styles.valueInfo}>Лыжи</div>
+                    <div className={styles.valueInfo}>
+                        {props.person.inventory.map((el) => {
+                            return (
+                                <>{`${el.nameInventory}${'№'}${
+                                    el.numInventory
+                                } ${' '}`}</>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
             <div className={styles.lineGray}></div>
@@ -51,6 +59,7 @@ const CardPerson = (props) => {
                     width={120}
                     height={50}
                     color='#ff7c7c'
+                    disabled={props.person.inventory.length !== 0}
                 />
                 <CustomButton
                     onClick={props.closeCard}

@@ -49,15 +49,19 @@ export default function Information({
             )}
             <div className={styles.content}>
                 <div className={styles.searchBlock}>
-                    {isPageInventory && (
-                        <div className={styles.searchImg}>
-                            <img
-                                src={setting}
-                                alt='setting'
-                                onClick={() => props.toggleSetting()}
-                            />
-                        </div>
-                    )}
+                    {/* {isPageInventory && ( */}
+                    <div className={styles.searchImg}>
+                        <img
+                            src={setting}
+                            alt='setting'
+                            onClick={() => {
+                                isPageInventory
+                                    ? props.toggleSetting()
+                                    : alert('Настройки');
+                            }}
+                        />
+                    </div>
+                    {/* )} */}
                     <div className={styles.searchImg}>
                         <img
                             src={serachImg}

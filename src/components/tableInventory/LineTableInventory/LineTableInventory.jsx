@@ -2,14 +2,13 @@ import { useState } from 'react';
 import styles from './LineTableInventory.module.scss';
 
 export default function LineTableInventory(props) {
-    const [isChoose, setIsChoose] = useState(false);
     const [reverseId, setReverseId] = useState(false);
     const [reverseNum, setReverseNum] = useState(false);
     const [reverseName, setReverseName] = useState(false);
 
     const toggleChoose = () => {
-        setIsChoose(!isChoose);
-        if (!isChoose && props.setChoosePerson) {
+        props.setChoose(props.id);
+        if (!props.isChoose && props.setChoosePerson) {
             props.setChoosePerson(props.el);
         } else if (props.setChoosePerson) {
             props.setChoosePerson(null);
@@ -20,7 +19,7 @@ export default function LineTableInventory(props) {
         <div
             onClick={toggleChoose}
             className={`${styles.container} ${
-                isChoose && styles.containerChoose
+                props.isChoose && styles.containerChoose
             }`}
         >
             {props.titleSortList ? (

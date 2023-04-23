@@ -2,21 +2,21 @@ import { useState } from 'react';
 import styles from './LineTable.module.scss';
 
 export default function LineTable(props) {
-    const [isChoose, setIsChoose] = useState(false);
+    // const [isChoose, setIsChoose] = useState(false);
     const [reverseId, setReverseId] = useState(false);
     const [reverseDate, setReverseDate] = useState(false);
     const [reverseNum, setReverseNum] = useState(false);
     const [reverseName, setReverseName] = useState(false);
-    const toggleChoose = () => {
-        setIsChoose(!isChoose);
-    };
+    // const toggleChoose = () => {
+    //     setIsChoose(!isChoose);
+    // };
 
     return (
         <div
             onDoubleClick={() => props.openCard(props.id)}
-            onClick={toggleChoose}
+            onClick={() => props.setChoose(props.id)}
             className={`${styles.container} ${
-                isChoose
+                props.isChoose
                     ? styles.containerChoose
                     : props.isTimeOver
                     ? props.isMountain
