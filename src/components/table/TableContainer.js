@@ -5,7 +5,7 @@ import { textFilter, titleSortList } from '../../redux/informationReducer';
 const mapStateToProps = (state) => {
     return {
         tableList: state.informationPage.filterList,
-        timeNow: state.informationPage.timeNow,
+        visibleSearch: state.informationPage.visibleSearch,
     };
 };
 

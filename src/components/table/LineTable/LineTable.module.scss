@@ -3,18 +3,23 @@
     display: flex;
     width: 100%;
     background-color: white;
+    z-index: 998;
+    div{
+        display: flex;
+        width: 100%;
+    }
     .lineId{
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 5%;
+        width: 80px;
         border-bottom: 1px solid black;
         span{
             cursor: pointer;
         }
     }
     .lineTime{
-        width: 20%;
+        width: 240px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -27,7 +32,7 @@
     }
     
     .lineNum{
-        width: 30%;
+        width: 500px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -40,7 +45,7 @@
     }
     
     .lineName{
-        width: 45%;
+        width: calc(100% - 820px);
         display: flex;
         align-items: center;
         justify-content: center;

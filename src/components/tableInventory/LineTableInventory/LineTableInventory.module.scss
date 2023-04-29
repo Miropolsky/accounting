@@ -7,7 +7,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 6%;
+        width: 90px;
         border-bottom: 1px solid black;
         span{
             cursor: pointer;
@@ -15,19 +15,20 @@
     }
     
     .lineNum{
-        width: 59%;
+        width: calc(100% - 588px);
         display: flex;
         align-items: center;
         justify-content: center;
         border: 1px solid black;
         border-top: none;
+        border-right: none;
         span{
             cursor: pointer;
         }
     }
     
     .lineName{
-        width: 35%;
+        width: 500px;
         display: flex;
         align-items: center;
         justify-content: center;

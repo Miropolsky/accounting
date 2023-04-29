@@ -80,6 +80,126 @@ const initialState = {
             isSurface: false,
             isTimeOver: null,
         },
+        {
+            id: 7,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 8,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 9,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 10,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 11,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 12,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 13,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 14,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 15,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 16,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 17,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
+        {
+            id: 18,
+            time: '12.04.2023 18:05',
+            num: '2',
+            name: 'Бобров Павел Васильевич',
+            inventory: [],
+            isMountain: true,
+            isSurface: false,
+            isTimeOver: null,
+        },
     ],
     filterList: [],
     // inventoryList: [],
@@ -159,6 +279,7 @@ const setListVisableInventory = (listInvetory) => {
 const informationReducer = (state = initialState, action) => {
     switch (action.type) {
         case TEXT_FILTER:
+            let isEdit = true;
             let filterList;
             if (state.typeFilter === 'fio') {
                 filterList = state.tableList.filter((user) =>
@@ -177,13 +298,26 @@ const informationReducer = (state = initialState, action) => {
                 );
             }
             if (action.text === '') {
+                // isEdit = true;
+                // console.log(state.filterList);
+                // console.log(state.tableList);
+                // console.log(state.filterList === state.tableList);
+                // if (state.filterList !== state.tableList) {
+                //     isEdit = true;
+                // }
                 filterList = state.tableList;
             }
-            return {
-                ...state,
-                textFilter: action.text,
-                filterList: [...filterList],
-            };
+            // if (action.text === 'start') {
+            //     isEdit = true;
+            //     filterList = state.tableList;
+            // }
+            return isEdit
+                ? {
+                      ...state,
+                      textFilter: action.text,
+                      filterList: [...filterList],
+                  }
+                : state;
         case TOGGLE_VISIBLE_SEARCH:
             return {
                 ...state,
@@ -245,17 +379,22 @@ const informationReducer = (state = initialState, action) => {
             return { ...state, choosePerson: { ...action.person } };
         }
         case SET_DATE_NOW: {
+            let isEdit = false;
             let filterList = state.filterList.map((el) => {
-                if (timeOver(el.time, action.date, 8)) {
+                if (timeOver(el.time, action.date, 8) && !el.isTimeOver) {
+                    isEdit = true;
                     el.isTimeOver = true;
                 }
                 return el;
             });
-            return {
-                ...state,
-                filterList: [...filterList],
-                timeNow: action.date,
-            };
+
+            return isEdit
+                ? {
+                      ...state,
+                      filterList: [...filterList],
+                      timeNow: action.date,
+                  }
+                : state;
         }
         case SET_VISIBLE_INVENTORY: {
             return {

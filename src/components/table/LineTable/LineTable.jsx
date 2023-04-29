@@ -10,11 +10,9 @@ export default function LineTable(props) {
     // const toggleChoose = () => {
     //     setIsChoose(!isChoose);
     // };
-
+    // console.log(props);
     return (
         <div
-            onDoubleClick={() => props.openCard(props.id)}
-            onClick={() => props.setChoose(props.id)}
             className={`${styles.container} ${
                 props.isChoose
                     ? styles.containerChoose
@@ -69,12 +67,12 @@ export default function LineTable(props) {
                     </div>
                 </>
             ) : (
-                <>
+                <div>
                     <div className={styles.lineId}>{props.id}</div>
                     <div className={styles.lineTime}>{props.time}</div>
                     <div className={styles.lineNum}>{props.num}</div>
                     <div className={styles.lineName}>{props.name}</div>
-                </>
+                </div>
             )}
         </div>
     );

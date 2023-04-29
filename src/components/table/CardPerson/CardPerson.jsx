@@ -26,11 +26,11 @@ const CardPerson = (props) => {
                 <div className={styles.valuesInfo}>
                     <div className={styles.valueInfo}>{props.person.num}</div>
                     <div className={styles.valueInfo}>
-                        {props.person.inventory.map((el) => {
+                        {props.person.inventory.map((el, i) => {
                             return (
-                                <>{`${el.nameInventory}${'№'}${
+                                <span key={i}>{`${el.nameInventory}${'№'}${
                                     el.numInventory
-                                } ${' '}`}</>
+                                } ${' '}`}</span>
                             );
                         })}
                     </div>

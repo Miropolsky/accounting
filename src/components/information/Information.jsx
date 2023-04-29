@@ -18,6 +18,7 @@ export default function Information({
 }) {
     let { pathname } = useLocation();
     const navigate = useNavigate();
+    // console.log('render');
     const [isPageInventory, setIsPageInventory] = useState(false);
     useEffect(() => {
         if (pathname === '/inventory') {
