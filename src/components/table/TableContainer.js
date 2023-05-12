@@ -3,10 +3,8 @@ import Table from './Table';
 import {
     textFilter,
     titleSortList,
-    getPeople,
-    getInventory,
-    getIssued,
     getMainList,
+    setChooseInventory,
 } from '../../redux/informationReducer';
 import { useEffect } from 'react';
 
@@ -30,10 +28,8 @@ const mapStateToProps = (state) => {
 const TableContainer = connect(mapStateToProps, {
     textFilter,
     titleSortList,
-    getPeople,
-    getInventory,
-    getIssued,
     getMainList,
+    setChooseInventory,
 })(TableContainerApi);
 
 export default TableContainer;

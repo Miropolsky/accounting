@@ -8,6 +8,7 @@ export default function LineTable(props) {
     const [reverseDate, setReverseDate] = useState(false);
     const [reverseNum, setReverseNum] = useState(false);
     const [reverseName, setReverseName] = useState(false);
+    const [reverseInventory, setReverseInventory] = useState(false);
     // const toggleChoose = () => {
     //     setIsChoose(!isChoose);
     // };
@@ -66,6 +67,19 @@ export default function LineTable(props) {
                             {props.name}
                         </span>
                     </div>
+                    <div className={styles.lineInventory}>
+                        <span
+                            onClick={() => {
+                                props.titleSortList(
+                                    'inventory',
+                                    reverseInventory
+                                );
+                                setReverseInventory(!reverseInventory);
+                            }}
+                        >
+                            {props.inventory}
+                        </span>
+                    </div>
                 </>
             ) : (
                 <div>
@@ -78,6 +92,18 @@ export default function LineTable(props) {
                         {props.name !== 'null null null'
                             ? props.name
                             : 'Не указано'}
+                    </div>
+                    <div className={styles.lineInventory}>
+                        {props.inventory.length !== 0 &&
+                        props.inventory !== undefined
+                            ? props.inventory.map((el, i) => (
+                                  <span key={i}>
+                                      {el.device_type === 1 && 'Лыжи'}
+                                      {el.device_type === 0 && 'Палки'}
+                                      {` №${el.device_number}`}
+                                  </span>
+                              ))
+                            : 'Не закреплен'}
                     </div>
                 </div>
             )}

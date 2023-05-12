@@ -44,9 +44,11 @@ const Table = React.memo((props) => {
     const closeCardPerson = () => {
         setIsCardPerson(false);
         setIdCard(null);
+        props.setChooseInventory(null);
     };
     const closeCardInventory = () => {
         setIsCardInventory(false);
+        props.setChooseInventory(null);
     };
     function findInventory(peopleId) {
         const invent = props.inventoryList.filter(
@@ -59,10 +61,11 @@ const Table = React.memo((props) => {
             <div className={styles.content}>
                 <LineTable
                     titleSortList={props.titleSortList}
-                    id='№'
+                    id='Запись'
                     time='Время выдачи'
-                    num='Номер'
+                    num='Номер инвентаря'
                     name='ФИО'
+                    inventory='Инвентарь'
                 />
 
                 <div className={styles.card}>
@@ -87,7 +90,9 @@ const Table = React.memo((props) => {
                             itemCount={props.mainList.length}
                             itemData={{
                                 mainList: props.mainList,
+                                inventoryList: props.inventoryList,
                                 openCardPerson: openCardPerson,
+                                setChooseInventory: props.setChooseInventory,
                                 setChoose: setChoose,
                                 idCard,
                             }}
@@ -105,17 +110,21 @@ const Table = React.memo((props) => {
 
 const Row = (props) => {
     const { data, index, style } = props;
-    const { setChoose, openCardPerson, idCard, mainList } = data;
+    const {
+        setChoose,
+        openCardPerson,
+        idCard,
+        mainList,
+        inventoryList,
+        setChooseInventory,
+    } = data;
     const el = mainList[index];
-    // function findName(peopleId) {
-    //     const people = tableList.filter(
-    //         (people) => people.people_id === peopleId
-    //     );
-    //     if (people.length === 0) {
-    //         return 'Не найден';
-    //     }
-    //     return `${people[0].lastname} ${people[0].firstname} ${people[0].middlename}`;
-    // }
+    function findInventory(deviceId) {
+        const invent = inventoryList.filter((el) => el.device_id === deviceId);
+        return invent;
+    }
+    const inventory = findInventory(el.device_id);
+
     let nameUser = 'Не найден';
     if (el.person) {
         nameUser = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
@@ -127,23 +136,26 @@ const Row = (props) => {
             onDoubleClick={() => {
                 if (nameUser !== 'Не найден') {
                     openCardPerson(el.people_id);
+                    if (inventory.length !== 0)
+                        setChooseInventory(inventory[0]);
                 }
             }}
             onClick={() => {
                 if (setChoose) {
-                    return setChoose(el.people_id);
+                    return setChoose(el.device_id);
                 }
             }}
         >
             <LineTable
-                isChoose={idCard && idCard === el.people_id}
+                isChoose={idCard && idCard === el.device_id}
                 id={el.id}
                 time={el.datetime}
-                num={el.people_id}
+                num={el.device_id}
                 name={nameUser}
                 isTimeOver={false}
                 isMountain={false}
                 key={el.people_id}
+                inventory={inventory}
             />
         </div>
     );

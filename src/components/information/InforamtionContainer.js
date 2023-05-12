@@ -23,6 +23,7 @@ const mapStateToProps = (state) => {
         visibleSetting: state.informationPage.visibleSetting,
         choosePerson: state.informationPage.choosePerson,
         visibleInventory: state.informationPage.visibleInventory,
+        chooseInventory: state.informationPage.chooseInventory,
     };
 };
 

@@ -98,7 +98,12 @@ export default function Information({
                         border='1px solid black'
                     />
                     <div className={styles.titleInventory}>
-                        Выдается инвентарь: лыжи №213
+                        Выдается инвентарь:{' '}
+                        <span>
+                            {props.chooseInventory.device_type === 1 && 'Лыжи'}
+                            {props.chooseInventory.device_type === 0 && 'Палки'}
+                            {` №${props.chooseInventory.device_number}`}
+                        </span>
                     </div>
                     <CustomButton
                         onClick={acceptBtn}
