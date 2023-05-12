@@ -22,45 +22,57 @@ export default function LineTableInventory(props) {
                 props.isChoose && styles.containerChoose
             }`}
         >
-            {props.titleSortList ? (
+            {props.titleSortListInventory ? (
                 <>
                     <div className={styles.lineId}>
                         <span
                             onClick={() => {
-                                props.titleSortList('№', reverseId);
+                                props.titleSortListInventory('№', reverseId);
                                 setReverseId(!reverseId);
                             }}
                         >
                             {props.id}
                         </span>
                     </div>
-                    <div className={styles.lineName}>
-                        <span
-                            onClick={() => {
-                                props.titleSortList('name', reverseName);
-                                setReverseName(!reverseName);
-                            }}
-                        >
-                            {props.name}
-                        </span>
-                    </div>
                     <div className={styles.lineNum}>
                         <span
                             onClick={() => {
-                                props.titleSortList('number', reverseNum);
+                                props.titleSortListInventory(
+                                    'number',
+                                    reverseNum
+                                );
                                 setReverseNum(!reverseNum);
                             }}
                         >
                             {props.num}
                         </span>
                     </div>
+                    <div className={styles.lineName}>
+                        <span
+                            onClick={() => {
+                                props.titleSortListInventory(
+                                    'name',
+                                    reverseName
+                                );
+                                setReverseName(!reverseName);
+                            }}
+                        >
+                            {props.name}
+                        </span>
+                    </div>
                 </>
             ) : (
                 <>
                     <div className={styles.lineId}>{props.id}</div>
-                    <div className={styles.lineName}>{props.name}</div>
                     <div className={styles.lineNum}>
-                        {props.inventory.map((el, i) => {
+                        {props.el && props.el.people_id}
+                    </div>
+                    <div className={styles.lineName}>
+                        {props.nameUser !== 'null null null'
+                            ? props.nameUser
+                            : 'Не указан'}
+
+                        {/* {props.inventory.map((el, i) => {
                             let probel = '';
                             if (i !== props.inventory.length - 1) {
                                 probel = ', ';
@@ -71,7 +83,7 @@ export default function LineTableInventory(props) {
                                     key={i}
                                 >{`${el.nameInventory} №${el.numInventory}${probel}`}</div>
                             );
-                        })}
+                        })} */}
                     </div>
                 </>
             )}

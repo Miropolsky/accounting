@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './LineTable.module.scss';
+import parseDateTime from '../../../common/dateParse';
 
 export default function LineTable(props) {
     // const [isChoose, setIsChoose] = useState(false);
@@ -69,9 +70,15 @@ export default function LineTable(props) {
             ) : (
                 <div>
                     <div className={styles.lineId}>{props.id}</div>
-                    <div className={styles.lineTime}>{props.time}</div>
+                    <div className={styles.lineTime}>
+                        {parseDateTime(props.time)}
+                    </div>
                     <div className={styles.lineNum}>{props.num}</div>
-                    <div className={styles.lineName}>{props.name}</div>
+                    <div className={styles.lineName}>
+                        {props.name !== 'null null null'
+                            ? props.name
+                            : 'Не указано'}
+                    </div>
                 </div>
             )}
         </div>

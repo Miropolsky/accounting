@@ -15,7 +15,7 @@
     }
     
     .lineNum{
-        width: calc(100% - 588px);
+        width: 500px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -28,7 +28,8 @@
     }
     
     .lineName{
-        width: 500px;
+        width: calc(100% - 588px);
+        
         display: flex;
         align-items: center;
         justify-content: center;

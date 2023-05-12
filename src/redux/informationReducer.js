@@ -1,13 +1,22 @@
-const TEXT_FILTER = 'TEXT FILTER';
+import { peopleApi } from '../api/api';
+import parseDateTime from '../common/dateParse';
+const SET_PEOPLE = 'SET_PEOPLE';
+const SET_INVENTORY = 'SET_INVENTORY';
+const TEXT_FILTER = 'TEXT_FILTER';
+const TEXT_FILTER_INVENTORY = 'TEXT_INVENTORY';
 const TOGGLE_VISIBLE_SEARCH = 'TOGGLE_VISIBLE_SEARCH';
 const TOGGLE_VISIBLE_SIDE_MENU = 'TOGGLE_VISIBLE_SIDE_MENU';
 const OFF_VISIBLE_SIDE_MENU = 'OFF_VISIBLE_SIDE_MENU';
 const SET_TYPE_FILTER = 'SET_TYPE_FILTER';
 const SORT_LIST = 'SORT_LIST';
+const SORT_LIST_INVENTORY = 'SORT_LIST_INVENTORY';
 const SET_DATE_NOW = 'SET_DATE_NOW';
 const SET_CHOOSE_PERSON = 'SET_CHOOSE_PERSON';
+const SET_CHOOSE_INVENTORY = 'SET_CHOOSE_INVENTORY';
 const SET_VISIBLE_INVENTORY = 'SET_VISIBLE_INVENTORY';
 const SET_LIST_INVENTORY = 'SET_LIST_INVENTORY';
+const SET_ISSUED = 'SET_ISSUED';
+const SET_MAIN_LIST = 'SET_MAIN_LIST';
 
 const initialState = {
     given: 30,
@@ -15,198 +24,24 @@ const initialState = {
     onSurface: 2,
     violators: 0,
     timeNow: new Date(),
-    tableList: [
-        {
-            id: 1,
-            time: '01.10.2023 22:02',
-            num: '234152332',
-            name: 'Глебов Глеб Иванович',
-            inventory: [
-                { numInventory: 111, nameInventory: 'Лыжи' },
-                { numInventory: 11, nameInventory: 'Палки' },
-                { numInventory: 34, nameInventory: 'Ботинки' },
-            ],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 2,
-            time: '10.11.2023 02:12',
-            num: '3232',
-            name: 'Бородин Сергей Сергеевич',
-            inventory: [{ numInventory: 11, nameInventory: 'Палки' }],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 3,
-            time: '02.02.2023 12:02',
-            num: '11',
-            name: 'Седов Максим Петрович',
-            inventory: [{ numInventory: 34, nameInventory: 'Ботинки' }],
-            isMountain: false,
-            isSurface: true,
-            isTimeOver: null,
-        },
-        {
-            id: 4,
-            time: '06.04.2023 12:02',
-            num: '102',
-            name: 'Петров Петр Петрович',
-            inventory: [{ numInventory: 1, nameInventory: 'Лыжи' }],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 5,
-            time: '12.04.2023 18:05',
-            num: '214',
-            name: 'Панкратов Алексей Алексеевич',
-            inventory: [{ numInventory: 111, nameInventory: 'Палки' }],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 6,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 7,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 8,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 9,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 10,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 11,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 12,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 13,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 14,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 15,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 16,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 17,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-        {
-            id: 18,
-            time: '12.04.2023 18:05',
-            num: '2',
-            name: 'Бобров Павел Васильевич',
-            inventory: [],
-            isMountain: true,
-            isSurface: false,
-            isTimeOver: null,
-        },
-    ],
+    mainList: [],
+    loadedMainList: [],
+    peopleList: [],
+    loadedPeopleList: [],
+
     filterList: [],
-    // inventoryList: [],
+    tableList: [],
+    issuedList: [],
+    filterIssuedList: [],
+    inventoryList: [],
+    filterInventoryList: [],
+
     textFilter: '',
+    textFilterInventory: '',
     visibleSearch: false,
     visibleSetting: false,
     typeFilter: 'all',
+    chooseInventory: null,
     choosePerson: null,
     visibleInventory: 'lineInventory',
     listVisibleInventory: [],
@@ -215,6 +50,12 @@ const initialState = {
 const textFilter = (text) => {
     return {
         type: TEXT_FILTER,
+        text,
+    };
+};
+const textFilterInventory = (text) => {
+    return {
+        type: TEXT_FILTER_INVENTORY,
         text,
     };
 };
@@ -241,9 +82,35 @@ const setTypeFilter = (typeFilter) => {
     };
 };
 
+const setPeople = (people) => {
+    return {
+        type: SET_PEOPLE,
+        people,
+    };
+};
+const setInventory = (inventory) => {
+    return {
+        type: SET_INVENTORY,
+        inventory,
+    };
+};
+const setIssued = (issued) => {
+    return {
+        type: SET_ISSUED,
+        issued,
+    };
+};
+
 const titleSortList = (title, isReverse = false) => {
     return {
         type: SORT_LIST,
+        title,
+        isReverse,
+    };
+};
+const titleSortListInventory = (title, isReverse = false) => {
+    return {
+        type: SORT_LIST_INVENTORY,
         title,
         isReverse,
     };
@@ -262,6 +129,12 @@ const setChoosePerson = (person) => {
         person,
     };
 };
+const setChooseInventory = (inventory) => {
+    return {
+        type: SET_CHOOSE_INVENTORY,
+        inventory,
+    };
+};
 const setVisibleInventory = (visible) => {
     return {
         type: SET_VISIBLE_INVENTORY,
@@ -276,54 +149,112 @@ const setListVisableInventory = (listInvetory) => {
     };
 };
 
+const setMainList = (listPeople, listIssued) => {
+    function findPeople(peopleId) {
+        const people = listPeople.filter(
+            (invent) => invent.people_id === peopleId
+        );
+        if (people.length === 0) {
+            return null;
+        }
+        return people[0];
+    }
+    const mainList = [];
+    listIssued.forEach((el, i) => {
+        mainList.push({
+            ...el,
+            id: i,
+            person: findPeople(el.people_id),
+        });
+    });
+    return {
+        type: SET_MAIN_LIST,
+        mainList,
+    };
+};
+
 const informationReducer = (state = initialState, action) => {
     switch (action.type) {
         case TEXT_FILTER:
-            let isEdit = true;
             let filterList;
             if (state.typeFilter === 'fio') {
-                filterList = state.tableList.filter((user) =>
-                    user.name.includes(action.text)
-                );
+                filterList = state.loadedMainList.filter((el) => {
+                    if (!el.person) {
+                        return false;
+                    }
+                    const fullName = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
+                    return fullName.includes(action.text);
+                });
             }
             if (state.typeFilter === 'all') {
-                filterList = state.tableList.filter((user) => {
-                    let allValue = `${user.name} ${user.time} ${user.num}`;
+                filterList = state.loadedMainList.filter((el) => {
+                    if (!el.person) {
+                        return false;
+                    }
+                    const fullName = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
+                    let allValue = `${fullName} ${parseDateTime(el.datetime)} ${
+                        el.person.people_id
+                    }`;
                     return allValue.includes(action.text);
                 });
             }
             if (state.typeFilter === 'number') {
-                filterList = state.tableList.filter((user) =>
-                    user.num.includes(action.text)
+                filterList = state.loadedMainList.filter((user) =>
+                    `${user.people_id}`.includes(action.text)
                 );
             }
             if (action.text === '') {
-                // isEdit = true;
-                // console.log(state.filterList);
-                // console.log(state.tableList);
-                // console.log(state.filterList === state.tableList);
-                // if (state.filterList !== state.tableList) {
-                //     isEdit = true;
-                // }
-                filterList = state.tableList;
+                filterList = state.loadedMainList;
             }
-            // if (action.text === 'start') {
-            //     isEdit = true;
-            //     filterList = state.tableList;
-            // }
-            return isEdit
-                ? {
-                      ...state,
-                      textFilter: action.text,
-                      filterList: [...filterList],
-                  }
-                : state;
+
+            return {
+                ...state,
+                textFilter: action.text,
+                mainList: [...filterList],
+            };
+        case TEXT_FILTER_INVENTORY:
+            let filterListInventory;
+            if (state.typeFilter === 'fio') {
+                filterListInventory = state.loadedPeopleList.filter((el) => {
+                    if (!el.lastname) {
+                        return false;
+                    }
+                    const fullName = `${el.lastname} ${el.firstname} ${el.middlename}`;
+                    return fullName.includes(action.text);
+                });
+            }
+            if (state.typeFilter === 'all') {
+                filterListInventory = state.loadedPeopleList.filter((el) => {
+                    if (!el.lastname) {
+                        return false;
+                    }
+                    const fullName = `${el.lastname} ${el.firstname} ${el.middlename}`;
+                    let allValue = `${fullName} ${el.people_id}`;
+                    return allValue.includes(action.text);
+                });
+            }
+            if (state.typeFilter === 'number') {
+                filterListInventory = state.loadedPeopleList.filter((user) =>
+                    `${user.people_id}`.includes(action.text)
+                );
+            }
+            if (action.text === '') {
+                filterListInventory = state.loadedPeopleList;
+            }
+
+            return {
+                ...state,
+                textFilterInventory: action.text,
+                peopleList: [...filterListInventory],
+            };
         case TOGGLE_VISIBLE_SEARCH:
             return {
                 ...state,
-                filterList: [...state.tableList],
+                mainList: [...state.loadedMainList],
+                peopleList: [...state.peopleList],
                 visibleSearch: !state.visibleSearch,
                 textFilter: '',
+                textFilterInventory: '',
             };
         case TOGGLE_VISIBLE_SIDE_MENU: {
             return {
@@ -344,29 +275,84 @@ const informationReducer = (state = initialState, action) => {
             };
         }
         case SORT_LIST: {
-            let sortList = state.filterList
-                ? state.filterList
-                : state.tableList;
+            let sortList = state.mainList
+                ? state.mainList
+                : state.loadedMainList;
             if (action.title === '№') {
                 sortList.sort((a, b) => a.id - b.id);
             }
             if (action.title === 'date') {
                 sortList.sort((a, b) =>
-                    sortDate(dateParse(a.time), dateParse(b.time))
+                    sortDate(new Date(a.datetime), new Date(b.datetime))
                 );
             }
             if (action.title === 'number') {
-                sortList.sort((a, b) => a.num - b.num);
+                sortList.sort((a, b) => a.people_id - b.people_id);
             }
             if (action.title === 'name') {
-                sortList.sort((a, b) => a.name.localeCompare(b.name));
+                sortList.sort((a, b) => {
+                    let firstName;
+                    let secondName;
+                    if (!a.person || !a.person.lastname) {
+                        firstName = 'ЯЯЯЯ';
+                    } else {
+                        firstName =
+                            `${a.person.lastname} ${a.person.firstname} ${a.person.middlename}`.trim();
+                    }
+                    if (!b.person || !b.person.lastname) {
+                        secondName = 'ЯЯЯЯ';
+                    } else {
+                        secondName =
+                            `${b.person.lastname} ${b.person.firstname} ${b.person.middlename}`.trim();
+                    }
+
+                    return firstName.localeCompare(secondName);
+                });
             }
             if (action.isReverse) {
                 sortList.reverse();
             }
             return {
                 ...state,
-                filterList: [...sortList],
+                mainList: [...sortList],
+            };
+        }
+        case SORT_LIST_INVENTORY: {
+            let sortList = state.peopleList
+                ? state.peopleList
+                : state.loadedPeopleList;
+            if (action.title === '№') {
+                sortList.sort((a, b) => a.id - b.id);
+            }
+            if (action.title === 'number') {
+                sortList.sort((a, b) => a.people_id - b.people_id);
+            }
+            if (action.title === 'name') {
+                sortList.sort((a, b) => {
+                    let firstName;
+                    let secondName;
+                    if (!a.lastname || !a.middlename || !a.lastname) {
+                        firstName = 'ЯЯЯЯ';
+                    } else {
+                        firstName =
+                            `${a.lastname} ${a.firstname} ${a.middlename}`.trim();
+                    }
+                    if (!b.lastname || !b.middlename || !b.lastname) {
+                        secondName = 'ЯЯЯЯ';
+                    } else {
+                        secondName =
+                            `${b.lastname} ${b.firstname} ${b.middlename}`.trim();
+                    }
+
+                    return firstName.localeCompare(secondName);
+                });
+            }
+            if (action.isReverse) {
+                sortList.reverse();
+            }
+            return {
+                ...state,
+                peopleList: [...sortList],
             };
         }
         case SET_CHOOSE_PERSON: {
@@ -378,15 +364,24 @@ const informationReducer = (state = initialState, action) => {
             }
             return { ...state, choosePerson: { ...action.person } };
         }
+        case SET_CHOOSE_INVENTORY: {
+            if (action.inventory === null) {
+                return {
+                    ...state,
+                    invenroy: null,
+                };
+            }
+            return { ...state, chooseInventory: { ...action.inventory } };
+        }
         case SET_DATE_NOW: {
             let isEdit = false;
-            let filterList = state.filterList.map((el) => {
-                if (timeOver(el.time, action.date, 8) && !el.isTimeOver) {
-                    isEdit = true;
-                    el.isTimeOver = true;
-                }
-                return el;
-            });
+            // let filterList = state.filterList.map((el) => {
+            //     if (timeOver(el.time, action.date, 8) && !el.isTimeOver) {
+            //         isEdit = true;
+            //         el.isTimeOver = true;
+            //     }
+            //     return el;
+            // });
 
             return isEdit
                 ? {
@@ -418,24 +413,89 @@ const informationReducer = (state = initialState, action) => {
                 listVisibleInventory: action.listInvetory,
             };
         }
+        case SET_PEOPLE: {
+            return {
+                ...state,
+                peopleList: action.people,
+                loadedPeopleList: action.people,
+            };
+        }
+        case SET_ISSUED: {
+            return {
+                ...state,
+                issuedList: action.issued,
+                filterIssuedList: action.issued,
+            };
+        }
+        case SET_INVENTORY: {
+            return {
+                ...state,
+                inventoryList: action.inventory,
+            };
+        }
+        case SET_MAIN_LIST: {
+            console.log(action.mainList);
+            return {
+                ...state,
+                mainList: action.mainList,
+                loadedMainList: action.mainList,
+            };
+        }
         default:
             return state;
     }
 };
 
-function timeOver(time, dateNow, countHours) {
-    const hourDiff = dateParse(dateNow) - dateParse(time);
-    // const secDiff = hourDiff / 1000;
-    const minDiff = hourDiff / 60 / 1000;
-    return minDiff >= countHours * 60;
-}
+const getPeople = () => {
+    return async (dispatch) => {
+        let res = await peopleApi.getPeople();
+        dispatch(setPeople(res.data));
+    };
+};
+const getInventory = () => {
+    return async (dispatch) => {
+        let res = await peopleApi.getDevice();
+        dispatch(setInventory(res.data));
+    };
+};
+const getIssued = () => {
+    return async (dispatch) => {
+        let res = await peopleApi.getIssued();
+        dispatch(setIssued(res.data));
+    };
+};
 
-function dateParse(date) {
-    const [day, month, dates] = date.split('.');
-    const [year, time] = dates.split(' ');
-    const [hours, minutes] = time.split(':');
-    return new Date(year, month - 1, day, hours, minutes);
-}
+const getMainList = () => {
+    return async (dispatch) => {
+        let resIsseud = await peopleApi.getIssued();
+        let resPeople = await peopleApi.getPeople();
+        dispatch(setMainList(resPeople.data, resIsseud.data));
+        let resInvent = await peopleApi.getDevice();
+        dispatch(setInventory(resInvent.data));
+    };
+};
+
+// const getPeopleList = () => {
+//     return async (dispatch) => {
+//         let resPeople = await peopleApi.getPeople();
+//         let resIsseud = await peopleApi.getIssued();
+//         dispatch(setPeopleList(resPeople.data, resIsseud.data));
+//     };
+// };
+
+// function timeOver(time, dateNow, countHours) {
+//     const hourDiff = dateParse(dateNow) - dateParse(time);
+//     // const secDiff = hourDiff / 1000;
+//     const minDiff = hourDiff / 60 / 1000;
+//     return minDiff >= countHours * 60;
+// }
+
+// function dateParse(date) {
+//     const [day, month, dates] = date.split('.');
+//     const [year, time] = dates.split(' ');
+//     const [hours, minutes] = time.split(':');
+//     return new Date(year, month - 1, day, hours, minutes);
+// }
 
 function sortDate(a, b) {
     var dateA = a.getTime();
@@ -471,15 +531,23 @@ function transformListInventery(filterList, listVisibleInventory) {
 }
 
 export {
+    // getPeopleList,
+    getMainList,
     informationReducer,
     toggleSearch,
     toggleSetting,
     offSetting,
     textFilter,
+    textFilterInventory,
     setTypeFilter,
     titleSortList,
     setDateNow,
+    getPeople,
+    titleSortListInventory,
     setChoosePerson,
     setVisibleInventory,
     setListVisableInventory,
+    getInventory,
+    getIssued,
+    setChooseInventory,
 };

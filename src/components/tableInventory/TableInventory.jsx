@@ -6,12 +6,15 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 // import { useEffect, useState } from 'react';
 
 export default function TableInventory(props) {
-    // console.log('rend tableInventory');
     const [idChoose, setIdChoose] = useState(null);
+    const [customHeight, setCustomHeight] = useState(250);
     useEffect(() => {
-        props.textFilter('');
-        // eslint-disable-next-line
-    }, []);
+        if (props.visibleSearch) {
+            setCustomHeight(310);
+        } else {
+            setCustomHeight(250);
+        }
+    }, [props.visibleSearch]);
     const setChoose = (id) => {
         if (idChoose === id) {
             setIdChoose(null);
@@ -23,18 +26,19 @@ export default function TableInventory(props) {
         <div className={styles.container}>
             <div className={styles.content}>
                 <LineTableInventory
-                    titleSortList={props.titleSortList}
-                    id='Записи'
-                    num='Инвентарь'
+                    titleSortListInventory={props.titleSortListInventory}
+                    id='№'
+                    num='Индивидуальный номер'
                     name='ФИО'
                 />
                 <AutoSizer>
                     {({ height, width }) => (
                         <FixedSizeList
-                            height={window.innerHeight - 250}
-                            itemCount={props.tableList.length}
+                            height={window.innerHeight - customHeight}
+                            itemCount={props.peopleList.length}
                             itemData={{
-                                tableList: props.tableList,
+                                peopleList: props.peopleList,
+                                // tableList: props.tableList,
                                 setChoosePerson: props.setChoosePerson,
                                 setChoose: setChoose,
                                 idChoose,
@@ -70,30 +74,29 @@ export default function TableInventory(props) {
 
 const Row = (props) => {
     const { data, index, style } = props;
-    const { setChoose, setChoosePerson, idChoose, tableList } = data;
-    const el = tableList[index];
-    console.log(el);
+    const { setChoose, setChoosePerson, idChoose, peopleList } = data;
+    const el = peopleList[index];
+
+    const nameUser = `${el.lastname} ${el.firstname} ${el.middlename}`;
     return (
         <div
             style={style}
             onClick={() => {
                 if (setChoose) {
-                    return setChoose(el.id);
+                    return setChoose(el.people_id);
                 }
             }}
         >
             <LineTableInventory
                 setChoosePerson={setChoosePerson}
                 setChoose={setChoose}
-                isChoose={idChoose && idChoose === el.id}
+                tableList={peopleList}
+                nameUser={nameUser}
+                isChoose={idChoose && idChoose === el.people_id}
                 el={el}
-                // key={el.id}
+                // inventory={inventory}
+                key={el.id}
                 id={el.id}
-                num={el.num}
-                inventory={el.inventory}
-                name={el.name}
-                isTimeOver={el.isTimeOver}
-                isMountain={el.isMountain}
             />
         </div>
     );

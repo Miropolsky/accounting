@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import Information from './Information';
 import {
     textFilter,
+    textFilterInventory,
     toggleSearch,
     setTypeFilter,
     setDateNow,
@@ -17,6 +18,7 @@ const mapStateToProps = (state) => {
         onSurface: state.informationPage.onSurface,
         violators: state.informationPage.violators,
         text: state.informationPage.textFilter,
+        textInventory: state.informationPage.textFilterInventory,
         visibleSearch: state.informationPage.visibleSearch,
         visibleSetting: state.informationPage.visibleSetting,
         choosePerson: state.informationPage.choosePerson,
@@ -26,6 +28,7 @@ const mapStateToProps = (state) => {
 
 const InformationContainer = connect(mapStateToProps, {
     textFilter,
+    textFilterInventory,
     toggleSearch,
     toggleSetting,
     offSetting,

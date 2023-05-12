@@ -34,7 +34,9 @@ export default function Information({
     };
     const acceptBtn = () => {
         if (props.choosePerson !== null) {
-            alert(`${props.choosePerson.name} получил инвентарь`);
+            alert(
+                `${props.choosePerson.lastname} ${props.choosePerson.firstname} ${props.choosePerson.middlename} получил инвентарь`
+            );
             navigate('/');
         }
     };
@@ -57,8 +59,8 @@ export default function Information({
                             alt='setting'
                             onClick={() => {
                                 isPageInventory
-                                    ? props.toggleSetting()
-                                    : alert('Настройки');
+                                    ? alert('настройки')
+                                    : props.toggleSetting();
                             }}
                         />
                     </div>
@@ -114,22 +116,31 @@ export default function Information({
                     <select
                         onChange={(e) => props.setTypeFilter(e.target.value)}
                     >
-                        {!isPageInventory && (
-                            <option value='all' defaultValue>
-                                Все поля
-                            </option>
-                        )}
+                        <option value='all' defaultValue>
+                            Все поля
+                        </option>
+
                         <option value='fio'>ФИО</option>
-                        {!isPageInventory && (
-                            <option value='number'>Номер</option>
-                        )}
+
+                        <option value='number'>Номер</option>
                     </select>
-                    <input
-                        onChange={(e) => props.textFilter(e.target.value)}
-                        type='text'
-                        value={props.text}
-                        placeholder='Поиск...'
-                    ></input>
+                    {isPageInventory ? (
+                        <input
+                            onChange={(e) =>
+                                props.textFilterInventory(e.target.value)
+                            }
+                            type='text'
+                            value={props.textInventory}
+                            placeholder='Поиск...'
+                        />
+                    ) : (
+                        <input
+                            onChange={(e) => props.textFilter(e.target.value)}
+                            type='text'
+                            value={props.text}
+                            placeholder='Поиск...'
+                        />
+                    )}
                 </div>
             ) : null}
         </div>

@@ -7,13 +7,16 @@ import React, { useEffect, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 
 const Table = React.memo((props) => {
-    useEffect(() => {
-        props.textFilter('');
-        setTimeout(() => {
-            setIsCardInventory(true);
-        }, 5000);
-        // eslint-disable-next-line
-    }, []);
+    // useEffect(() => {
+    //     props.getPeople();
+    //     props.getInventory();
+    //     props.textFilter('');
+    //     setTimeout(() => {
+    //         setIsCardInventory(true);
+    //     }, 5000);
+    //     // eslint-disable-next-line
+    // }, []);
+
     useEffect(() => {
         if (props.visibleSearch) {
             setCustomHeight(220);
@@ -38,13 +41,19 @@ const Table = React.memo((props) => {
         setIdCard(id);
         setIsCardPerson(true);
     };
-    const closeCardPerson = (id) => {
+    const closeCardPerson = () => {
         setIsCardPerson(false);
         setIdCard(null);
     };
-    const closeCardInventory = (id) => {
+    const closeCardInventory = () => {
         setIsCardInventory(false);
     };
+    function findInventory(peopleId) {
+        const invent = props.inventoryList.filter(
+            (el) => el.people_id === peopleId
+        );
+        return invent;
+    }
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -60,9 +69,10 @@ const Table = React.memo((props) => {
                     {isCardPerson && (
                         <CardPerson
                             closeCard={closeCardPerson}
-                            person={props.tableList.find(
-                                (p) => p.id === idCard
+                            el={props.mainList.find(
+                                (p) => p.people_id === idCard
                             )}
+                            inventory={findInventory(idCard)}
                         />
                     )}
                     {isCardInventory && (
@@ -70,14 +80,13 @@ const Table = React.memo((props) => {
                     )}
                 </div>
 
-                {/* <div className={styles.tabl}> */}
                 <AutoSizer>
                     {({ height, width }) => (
                         <FixedSizeList
                             height={window.innerHeight - customHeight}
-                            itemCount={props.tableList.length}
+                            itemCount={props.mainList.length}
                             itemData={{
-                                tableList: props.tableList,
+                                mainList: props.mainList,
                                 openCardPerson: openCardPerson,
                                 setChoose: setChoose,
                                 idCard,
@@ -89,7 +98,6 @@ const Table = React.memo((props) => {
                         </FixedSizeList>
                     )}
                 </AutoSizer>
-                {/* </div> */}
             </div>
         </div>
     );
@@ -97,28 +105,45 @@ const Table = React.memo((props) => {
 
 const Row = (props) => {
     const { data, index, style } = props;
-    const { setChoose, openCardPerson, idCard, tableList } = data;
-    const el = tableList[index];
-    console.log(el);
+    const { setChoose, openCardPerson, idCard, mainList } = data;
+    const el = mainList[index];
+    // function findName(peopleId) {
+    //     const people = tableList.filter(
+    //         (people) => people.people_id === peopleId
+    //     );
+    //     if (people.length === 0) {
+    //         return 'Не найден';
+    //     }
+    //     return `${people[0].lastname} ${people[0].firstname} ${people[0].middlename}`;
+    // }
+    let nameUser = 'Не найден';
+    if (el.person) {
+        nameUser = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
+    }
+
     return (
         <div
             style={style}
-            onDoubleClick={() => openCardPerson(el.id)}
+            onDoubleClick={() => {
+                if (nameUser !== 'Не найден') {
+                    openCardPerson(el.people_id);
+                }
+            }}
             onClick={() => {
                 if (setChoose) {
-                    return setChoose(el.id);
+                    return setChoose(el.people_id);
                 }
             }}
         >
             <LineTable
-                isChoose={idCard && idCard === el.id}
-                // key={el.id}
+                isChoose={idCard && idCard === el.people_id}
                 id={el.id}
-                time={el.time}
-                num={el.num}
-                name={el.name}
-                isTimeOver={el.isTimeOver}
-                isMountain={el.isMountain}
+                time={el.datetime}
+                num={el.people_id}
+                name={nameUser}
+                isTimeOver={false}
+                isMountain={false}
+                key={el.people_id}
             />
         </div>
     );
