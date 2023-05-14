@@ -1,3 +1,5 @@
+import { authApi } from '../api/api';
+
 const SET_AUTH = 'SET_AUTH';
 const initialState = {
     isAuth: false,
@@ -9,7 +11,7 @@ const setAuthSuccess = () => {
     };
 };
 
-const informationReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_AUTH: {
             return { ...state, isAuth: true };
@@ -19,10 +21,14 @@ const informationReducer = (state = initialState, action) => {
     }
 };
 
-const setAuth = () => {
+const setAuth = (login, pas) => {
     return async (dispatch) => {
-        let res = await peopleApi.getPeople();
-        res.then((res) => console.log(res));
+        // let res = await authApi.login(login, pas);
+        // res.then((res) => console.log(res));
+
+        console.log(login, pas);
         dispatch(setAuthSuccess());
     };
 };
+
+export { authReducer, setAuth };

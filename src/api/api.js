@@ -16,8 +16,8 @@ const peopleApi = {
 };
 
 const authApi = {
-    login(log, pas) {
-        return instance.post('auth', { login: log, password: pas });
+    login(login, password) {
+        return instance.post('auth', { login, password });
     },
 };
 

@@ -17,11 +17,14 @@ const SET_VISIBLE_INVENTORY = 'SET_VISIBLE_INVENTORY';
 const SET_LIST_INVENTORY = 'SET_LIST_INVENTORY';
 const SET_ISSUED = 'SET_ISSUED';
 const SET_MAIN_LIST = 'SET_MAIN_LIST';
+// const SET_GIVEN = 'SET_GIVEN';
+// const SET_MINE = 'SET_MINE';
+// const SET_OUT = 'SET_OUT';
 
 const initialState = {
-    given: 30,
-    onMountain: 28,
-    onSurface: 2,
+    given: 0,
+    onMountain: 0,
+    onSurface: 0,
     violators: 0,
     timeNow: new Date(),
     mainList: [],
@@ -46,6 +49,25 @@ const initialState = {
     visibleInventory: 'lineInventory',
     listVisibleInventory: [],
 };
+
+// const setGiven = (given) => {
+//     return {
+//         type: SET_GIVEN,
+//         given,
+//     };
+// };
+// const setOnMountain = (onMountain) => {
+//     return {
+//         type: SET_MINE,
+//         onMountain,
+//     };
+// };
+// const setOnSurface = (onSurface) => {
+//     return {
+//         type: SET_OUT,
+//         onSurface,
+//     };
+// };
 
 const textFilter = (text) => {
     return {
@@ -160,7 +182,16 @@ const setMainList = (listPeople, listIssued) => {
         return people[0];
     }
     const mainList = [];
+    let countGiven = listIssued.length;
+    let countOnMountain = 0;
+    let countOnSurface = 0;
     listIssued.forEach((el, i) => {
+        if (el.in_mine) {
+            countOnMountain++;
+        }
+        if (el.is_out) {
+            countOnSurface++;
+        }
         mainList.push({
             ...el,
             id: i,
@@ -170,11 +201,32 @@ const setMainList = (listPeople, listIssued) => {
     return {
         type: SET_MAIN_LIST,
         mainList,
+        given: countGiven,
+        onMountain: countOnMountain,
+        onSurface: countOnSurface,
     };
 };
 
 const informationReducer = (state = initialState, action) => {
     switch (action.type) {
+        // case SET_GIVEN: {
+        //     return {
+        //         ...state,
+        //         given: action.given,
+        //     };
+        // }
+        // case SET_MINE: {
+        //     return {
+        //         ...state,
+        //         onMountain: action.onMountain,
+        //     };
+        // }
+        // case SET_OUT: {
+        //     return {
+        //         ...state,
+        //         onSurface: action.onSurface,
+        //     };
+        // }
         case TEXT_FILTER:
             let filterList;
             if (state.typeFilter === 'fio') {
@@ -434,11 +486,14 @@ const informationReducer = (state = initialState, action) => {
             };
         }
         case SET_MAIN_LIST: {
-            console.log(action.mainList);
+            // console.log(action.mainList);
             return {
                 ...state,
                 mainList: action.mainList,
                 loadedMainList: action.mainList,
+                given: action.given,
+                onMountain: action.onMountain,
+                onSurface: action.onSurface,
             };
         }
         default:
@@ -531,7 +586,6 @@ function transformListInventery(filterList, listVisibleInventory) {
 }
 
 export {
-    // getPeopleList,
     getMainList,
     informationReducer,
     toggleSearch,
