@@ -5,6 +5,7 @@ import Login from './login';
 const mapStateToProps = (state) => {
     return {
         isAuth: state.authPage.isAuth,
+        errorAuth: state.authPage.errorAuth,
     };
 };
 

@@ -3,7 +3,7 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    z-index: 999;
+    z-index: 10001;
     left: 30%;
     top: 60px;
     background-color: rgb(244, 244, 244);
@@ -38,7 +38,7 @@
     .buttons{
         margin-top: 50px;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-between;
         margin-bottom: 20px;
     }
 }

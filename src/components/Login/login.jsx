@@ -1,50 +1,8 @@
-import { useEffect, useRef } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { validate } from '../../common/validate';
 import styles from './Login.module.scss';
 
 export default function Login(props) {
-    const ws = useRef(null);
-    // const [eventWs, setEventWs] = useState([]);
-    // function createChannel() {
-    //     ws.current = new WebSocket('ws://127.0.0.1:8000/ws/event');
-    // }
-    useEffect(() => {
-        function createMyWebSocket() {
-            ws.current = new WebSocket('ws://127.0.0.1:8000/ws/event');
-            ws.current.onopen = () => {
-                console.log('Соединение установлено');
-            };
-            ws.current.onmessage = (event) => {
-                console.log(event.data);
-            };
-            // ws.current.onclose = (event) => {
-            //     if (event.wasClean === false) {
-            //         setTimeout(createMyWebSocket, 3000);
-            //     }
-            // };
-        }
-
-        createMyWebSocket();
-
-        // return () => ws.current.close();
-        // createChannel();
-    }, []);
-    // useEffect(() => {
-    //     ws.current.onopen = () => {
-    //         console.log('Соединение установлено');
-    //     };
-    //     ws.current.onmessage = (event) => {
-    //         console.log(event.data);
-    //     };
-    //     ws.current.onclose = (event) => {
-    //         console.log(`Закрыто ${count++}`);
-    //         if (event.wasClean === false) {
-    //             createChannel();
-    //             // setTimeout(createChannel, 3000);
-    //         }
-    //     };
-    // }, [ws]);
     return (
         <div className={styles.container}>
             <Formik
@@ -52,17 +10,17 @@ export default function Login(props) {
                     login: '',
                     password: '',
                 }}
-                onSubmit={(values) =>
-                    props.setAuth('Администратор', 'Qwerty123')
-                }
+                onSubmit={(values) => {
+                    props.setAuth(values.login, values.password);
+                }}
                 validate={validate}
             >
-                {({ errors, touched, isSubmitting, status }) => (
+                {({ errors, touched, status }) => (
                     <Form>
                         <div className={styles.login}>
                             <div className={styles.loginText}>Логин</div>
                             <Field type='text' name='login' placeholder='login'>
-                                {({ field, form }) => (
+                                {({ field }) => (
                                     <input
                                         style={{ border: '1px solid black' }}
                                         {...field}
@@ -85,7 +43,7 @@ export default function Login(props) {
                                 placeholder='Password'
                                 type='password'
                             >
-                                {({ field, form }) => (
+                                {({ field }) => (
                                     <input
                                         style={{ border: '1px solid black' }}
                                         {...field}
@@ -101,11 +59,11 @@ export default function Login(props) {
                                 </div>
                             )}
                         </div>
-                        {status ? (
-                            status.error ? (
-                                <div>{status.error}</div>
-                            ) : null
-                        ) : null}
+                        {props.errorAuth && (
+                            <div className={styles.error}>
+                                {props.errorAuth}
+                            </div>
+                        )}
                         <button
                             className={styles.btn}
                             type='submit'

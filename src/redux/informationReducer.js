@@ -20,6 +20,7 @@ const SET_MAIN_LIST = 'SET_MAIN_LIST';
 // const SET_GIVEN = 'SET_GIVEN';
 // const SET_MINE = 'SET_MINE';
 // const SET_OUT = 'SET_OUT';
+const SET_EVENT = 'SET_EVENT';
 
 const initialState = {
     given: 0,
@@ -31,7 +32,8 @@ const initialState = {
     loadedMainList: [],
     peopleList: [],
     loadedPeopleList: [],
-
+    methodEvent: '',
+    elEvent: '',
     filterList: [],
     tableList: [],
     issuedList: [],
@@ -39,45 +41,28 @@ const initialState = {
     inventoryList: [],
     filterInventoryList: [],
 
-    textFilter: '',
     textFilterInventory: '',
+    chooseInventory: null,
+    textFilter: '',
     visibleSearch: false,
     visibleSetting: false,
     typeFilter: 'all',
-    chooseInventory: null,
     choosePerson: null,
     visibleInventory: 'lineInventory',
     listVisibleInventory: [],
 };
 
-// const setGiven = (given) => {
-//     return {
-//         type: SET_GIVEN,
-//         given,
-//     };
-// };
-// const setOnMountain = (onMountain) => {
-//     return {
-//         type: SET_MINE,
-//         onMountain,
-//     };
-// };
-// const setOnSurface = (onSurface) => {
-//     return {
-//         type: SET_OUT,
-//         onSurface,
-//     };
-// };
+const setEvent = (eventObj) => {
+    return {
+        type: SET_EVENT,
+        methodEvent: eventObj.method,
+        event: eventObj.event,
+    };
+};
 
 const textFilter = (text) => {
     return {
         type: TEXT_FILTER,
-        text,
-    };
-};
-const textFilterInventory = (text) => {
-    return {
-        type: TEXT_FILTER_INVENTORY,
         text,
     };
 };
@@ -90,6 +75,13 @@ const toggleSearch = () => {
 const toggleSetting = () => {
     return {
         type: TOGGLE_VISIBLE_SIDE_MENU,
+    };
+};
+
+const textFilterInventory = (text) => {
+    return {
+        type: TEXT_FILTER_INVENTORY,
+        text,
     };
 };
 const offSetting = () => {
@@ -182,18 +174,31 @@ const setMainList = (listPeople, listIssued) => {
         return people[0];
     }
     const mainList = [];
-    let countGiven = listIssued.length;
+    let countGiven = 0;
     let countOnMountain = 0;
     let countOnSurface = 0;
+    let violators = 0;
     listIssued.forEach((el, i) => {
+        let isTimerOver = false;
+        // if (timeOver(el.datetime, new Date(), 8000)) {
+        //     isTimerOver = true;
+        // }
         if (el.in_mine) {
             countOnMountain++;
+            if (!el.is_out) {
+                violators++;
+            }
         }
-        if (el.is_out) {
+        if (!el.in_mine) {
             countOnSurface++;
         }
+        if (el.is_out) {
+            countGiven++;
+        }
+
         mainList.push({
             ...el,
+            isTimeOver: isTimerOver,
             id: i,
             person: findPeople(el.people_id),
         });
@@ -204,6 +209,7 @@ const setMainList = (listPeople, listIssued) => {
         given: countGiven,
         onMountain: countOnMountain,
         onSurface: countOnSurface,
+        violators: violators,
     };
 };
 
@@ -227,6 +233,14 @@ const informationReducer = (state = initialState, action) => {
         //         onSurface: action.onSurface,
         //     };
         // }
+        case SET_EVENT: {
+            console.log(state);
+            return {
+                ...state,
+                methodEvent: action.methodEvent,
+                elEvent: action.event,
+            };
+        }
         case TEXT_FILTER:
             let filterList;
             if (state.typeFilter === 'fio') {
@@ -427,18 +441,27 @@ const informationReducer = (state = initialState, action) => {
         }
         case SET_DATE_NOW: {
             let isEdit = false;
-            // let filterList = state.filterList.map((el) => {
-            //     if (timeOver(el.time, action.date, 8) && !el.isTimeOver) {
-            //         isEdit = true;
-            //         el.isTimeOver = true;
-            //     }
-            //     return el;
-            // });
+            // console.log(action.date);
+            let filterList = state.mainList.map((el) => {
+                if (
+                    timeOver(el.datetime, dateParse(action.date), 8) &&
+                    !el.isTimeOver
+                ) {
+                    isEdit = true;
+                    el.isTimeOver = true;
+
+                    // if (el.device_id === 8936830511382528) {
+                    //     console.log(10);
+                    //     el.isTimeOver = false;
+                    // }
+                }
+                return el;
+            });
 
             return isEdit
                 ? {
                       ...state,
-                      filterList: [...filterList],
+                      mainList: [...filterList],
                       timeNow: action.date,
                   }
                 : state;
@@ -494,6 +517,7 @@ const informationReducer = (state = initialState, action) => {
                 given: action.given,
                 onMountain: action.onMountain,
                 onSurface: action.onSurface,
+                violators: action.violators,
             };
         }
         default:
@@ -520,6 +544,20 @@ const getIssued = () => {
     };
 };
 
+// const setEvent = (event) => {
+//     return {
+//         type: SET_EVENT,
+//         event,
+//     };
+// };
+// const connectWs = () => {
+//     return async (dispatch) => {
+//         wsApi.subscribe((event) => {
+//             dispatch(setEvent(event));
+//         });
+//     };
+// };
+
 const getMainList = () => {
     return async (dispatch) => {
         let resIsseud = await peopleApi.getIssued();
@@ -538,19 +576,19 @@ const getMainList = () => {
 //     };
 // };
 
-// function timeOver(time, dateNow, countHours) {
-//     const hourDiff = dateParse(dateNow) - dateParse(time);
-//     // const secDiff = hourDiff / 1000;
-//     const minDiff = hourDiff / 60 / 1000;
-//     return minDiff >= countHours * 60;
-// }
+function timeOver(time, dateNow, countHours) {
+    // let curdate = new Date(2023, 1, 20, 16, 52); //test
+    const hourDiff = dateNow - new Date(time);
+    const minDiff = hourDiff / 60 / 1000;
+    return minDiff >= countHours * 60;
+}
 
-// function dateParse(date) {
-//     const [day, month, dates] = date.split('.');
-//     const [year, time] = dates.split(' ');
-//     const [hours, minutes] = time.split(':');
-//     return new Date(year, month - 1, day, hours, minutes);
-// }
+function dateParse(date) {
+    const [day, month, dates] = date.split('.');
+    const [year, time] = dates.split(' ');
+    const [hours, minutes] = time.split(':');
+    return new Date(year, month - 1, day, hours, minutes);
+}
 
 function sortDate(a, b) {
     var dateA = a.getTime();
@@ -604,4 +642,5 @@ export {
     getInventory,
     getIssued,
     setChooseInventory,
+    setEvent,
 };

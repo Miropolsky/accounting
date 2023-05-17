@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 
 const Table = React.memo((props) => {
+    // console.log(props.timeNow);
     // useEffect(() => {
     //     props.getPeople();
     //     props.getInventory();
@@ -16,6 +17,14 @@ const Table = React.memo((props) => {
     //     }, 5000);
     //     // eslint-disable-next-line
     // }, []);
+    useEffect(() => {
+        console.log(props.inventoryEvent);
+        if (props.methodEvent === 'issued' && props.inventoryEvent) {
+            setIsCardInventory(true);
+        }
+        setIsCardInventory(true);
+        // eslint-disable-next-line
+    }, [props.inventoryEvent]);
 
     useEffect(() => {
         if (props.visibleSearch) {
@@ -56,6 +65,10 @@ const Table = React.memo((props) => {
         );
         return invent;
     }
+    function findInventoryInMain(deviceId) {
+        const invent = props.mainList.filter((el) => el.device_id === deviceId);
+        return invent;
+    }
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -79,7 +92,38 @@ const Table = React.memo((props) => {
                         />
                     )}
                     {isCardInventory && (
-                        <CardInventory closeCard={closeCardInventory} />
+                        <CardInventory
+                            elPeople={props.mainList.find(
+                                (p) =>
+                                    p.people_id ===
+                                    props.inventoryEvent.people_id
+                            )}
+                            el={{
+                                people_id: 3166593488477184,
+                                device_id: 8936830511382528,
+                                device_type: 1,
+                                datetime: '2023-02-20T08:52:45',
+                                parent_device_id: null,
+                                parent_device_type: null,
+                                in_mine: true,
+                                is_out: false,
+                                level: 1,
+                                person: {
+                                    people_id: 3166593488477184,
+                                    device_type: 1,
+                                    device_number: '4315',
+                                    parent_device_id: null,
+                                    params: {},
+                                    device_id: 8936830511382528,
+                                    room_number: 1,
+                                    device_serial: 4315,
+                                    parent_device_type: null,
+                                },
+                            }}
+                            isIssued={findInventoryInMain(8936830511382528)}
+                            // el={props.inventoryEvent}
+                            closeCard={closeCardInventory}
+                        />
                     )}
                 </div>
 
@@ -129,6 +173,7 @@ const Row = (props) => {
     if (el.person) {
         nameUser = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
     }
+    // let isTimeOver = false;
 
     return (
         <div
@@ -152,8 +197,8 @@ const Row = (props) => {
                 time={el.datetime}
                 num={el.device_id}
                 name={nameUser}
-                isTimeOver={false}
-                isMountain={false}
+                isTimeOver={el.isTimeOver}
+                isMountain={el.in_mine}
                 key={el.people_id}
                 inventory={inventory}
             />

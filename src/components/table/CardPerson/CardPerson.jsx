@@ -80,7 +80,7 @@ const CardPerson = (props) => {
                     height={50}
                     color='yellow'
                 />
-                <CustomButton
+                {/* <CustomButton
                     onClick={exchange}
                     text='Взамен'
                     width={120}
@@ -91,7 +91,7 @@ const CardPerson = (props) => {
                         props.el.person.inventory &&
                         props.el.person.inventory.length !== 0
                     }
-                />
+                /> */}
                 <CustomButton
                     onClick={props.closeCard}
                     text='Отмена'
