@@ -6,6 +6,7 @@ import {
     getMainList,
     setChooseInventory,
     setEvent,
+    setCounterInfo,
 } from '../../redux/informationReducer';
 import { useEffect, useRef } from 'react';
 
@@ -15,6 +16,10 @@ const TableContainerApi = (props) => {
         // props.getInventory();
         // eslint-disable-next-line
     }, []);
+    useEffect(() => {
+        props.setCounterInfo();
+        // eslint-disable-next-line
+    }, [props.mainList]);
     const ws = useRef(null);
     useEffect(() => {
         function createMyWebSocket() {
@@ -45,8 +50,29 @@ const TableContainerApi = (props) => {
 
     function parseEvent(message) {
         message = message.split(' ');
+
         let method = message.shift();
         message = JSON.parse(message.join(''));
+        if (method === 'issued') {
+            message.datetime =
+                message.datetime.slice(0, 10) +
+                'T' +
+                message.datetime.slice(10);
+        }
+        if (method === 'people') {
+            message.medexam_end =
+                message.medexam_end.slice(0, 10) +
+                'T' +
+                message.medexam_end.slice(10);
+            message.datetime_end =
+                message.datetime_end.slice(0, 10) +
+                'T' +
+                message.datetime_end.slice(10);
+            message.datetime_begin =
+                message.datetime_begin.slice(0, 10) +
+                'T' +
+                message.datetime_begin.slice(10);
+        }
         return {
             event: message,
             method,
@@ -72,6 +98,7 @@ const TableContainer = connect(mapStateToProps, {
     getMainList,
     setChooseInventory,
     setEvent,
+    setCounterInfo,
 })(TableContainerApi);
 
 export default TableContainer;

@@ -17,14 +17,14 @@ const Table = React.memo((props) => {
     //     }, 5000);
     //     // eslint-disable-next-line
     // }, []);
-    useEffect(() => {
-        console.log(props.inventoryEvent);
-        if (props.methodEvent === 'issued' && props.inventoryEvent) {
-            setIsCardInventory(true);
-        }
-        setIsCardInventory(true);
-        // eslint-disable-next-line
-    }, [props.inventoryEvent]);
+    // useEffect(() => {
+    //     console.log(props.inventoryEvent);
+    //     if (props.methodEvent === 'issued' && props.inventoryEvent) {
+    //         setIsCardInventory(true);
+    //     }
+    //     setIsCardInventory(true);
+    //     eslint-disable-next-line
+    // }, [props.inventoryEvent]);
 
     useEffect(() => {
         if (props.visibleSearch) {

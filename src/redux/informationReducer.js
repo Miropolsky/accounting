@@ -9,6 +9,7 @@ const TOGGLE_VISIBLE_SIDE_MENU = 'TOGGLE_VISIBLE_SIDE_MENU';
 const OFF_VISIBLE_SIDE_MENU = 'OFF_VISIBLE_SIDE_MENU';
 const SET_TYPE_FILTER = 'SET_TYPE_FILTER';
 const SORT_LIST = 'SORT_LIST';
+const SET_COUNTER_INFO = 'SET_COUNTER_INFO';
 const SORT_LIST_INVENTORY = 'SORT_LIST_INVENTORY';
 const SET_DATE_NOW = 'SET_DATE_NOW';
 const SET_CHOOSE_PERSON = 'SET_CHOOSE_PERSON';
@@ -163,6 +164,12 @@ const setListVisableInventory = (listInvetory) => {
     };
 };
 
+const setCounterInfo = () => {
+    return {
+        type: SET_COUNTER_INFO,
+    };
+};
+
 const setMainList = (listPeople, listIssued) => {
     function findPeople(peopleId) {
         const people = listPeople.filter(
@@ -174,31 +181,10 @@ const setMainList = (listPeople, listIssued) => {
         return people[0];
     }
     const mainList = [];
-    let countGiven = 0;
-    let countOnMountain = 0;
-    let countOnSurface = 0;
-    let violators = 0;
     listIssued.forEach((el, i) => {
-        let isTimerOver = false;
-        // if (timeOver(el.datetime, new Date(), 8000)) {
-        //     isTimerOver = true;
-        // }
-        if (el.in_mine) {
-            countOnMountain++;
-            if (!el.is_out) {
-                violators++;
-            }
-        }
-        if (!el.in_mine) {
-            countOnSurface++;
-        }
-        if (el.is_out) {
-            countGiven++;
-        }
-
         mainList.push({
             ...el,
-            isTimeOver: isTimerOver,
+            isTimeOver: false,
             id: i,
             person: findPeople(el.people_id),
         });
@@ -206,10 +192,7 @@ const setMainList = (listPeople, listIssued) => {
     return {
         type: SET_MAIN_LIST,
         mainList,
-        given: countGiven,
-        onMountain: countOnMountain,
-        onSurface: countOnSurface,
-        violators: violators,
+        listPeople,
     };
 };
 
@@ -233,8 +216,114 @@ const informationReducer = (state = initialState, action) => {
         //         onSurface: action.onSurface,
         //     };
         // }
+        case SET_COUNTER_INFO: {
+            let countGiven = 0;
+            let countOnMountain = 0;
+            let countOnSurface = 0;
+            let violators = 0;
+            state.mainList.forEach((el) => {
+                if (el.in_mine) {
+                    countOnMountain++;
+                    if (!el.is_out) {
+                        violators++;
+                    }
+                }
+                if (!el.in_mine) {
+                    countOnSurface++;
+                }
+                if (el.is_out) {
+                    countGiven++;
+                }
+            });
+            return {
+                ...state,
+                given: countGiven,
+                onMountain: countOnMountain,
+                onSurface: countOnSurface,
+                violators: violators,
+            };
+        }
         case SET_EVENT: {
-            console.log(state);
+            function findPeople(peopleId) {
+                const people = state.loadedPeopleList.filter(
+                    (person) => person.people_id === peopleId
+                );
+                if (people.length === 0) {
+                    return null;
+                }
+                return people[0];
+            }
+            console.log(action.event);
+            if (action.methodEvent === 'issued') {
+                let isEdit = false;
+                let person = findPeople(action.event.people_id);
+                let newMainList = state.loadedMainList.map((el) => {
+                    if (el.device_id === action.event.device_id) {
+                        console.log('Изменен issued');
+                        isEdit = true;
+                        return {
+                            ...action.event,
+                            id: el.id,
+                            person: person,
+                        };
+                    }
+                    return el;
+                });
+                if (!isEdit) {
+                    console.log('Добавлен issued');
+                    isEdit = true;
+                    newMainList.push({
+                        ...action.event,
+                        id: state.loadedMainList.length,
+                        person: person,
+                    });
+                }
+                return {
+                    ...state,
+                    // mainList: newMainList,
+                    loadedMainList: newMainList,
+                };
+            }
+            if (action.methodEvent === 'people') {
+                let isEditPeople = false;
+                let isEditMainList = false;
+                let newPeopleList = state.loadedPeopleList.map((el) => {
+                    if (el.people_id === action.event.people_id) {
+                        console.log('изменение people');
+                        isEditPeople = true;
+                        return {
+                            ...action.event,
+                        };
+                    }
+                    return el;
+                });
+                if (!isEditPeople) {
+                    console.log('Добавление people');
+                    isEditPeople = true;
+                    newPeopleList.push({ ...action.event });
+                }
+                let newMainList = state.loadedMainList.map((el) => {
+                    if (el.people_id === action.event.people_id) {
+                        isEditMainList = true;
+                        return { ...el, person: action.event };
+                    }
+                    return el;
+                });
+                return isEditMainList
+                    ? {
+                          ...state,
+                          peopleList: newPeopleList,
+                          loadedPeopleList: newPeopleList,
+                          //   mainList: newMainList,
+                          loadedMainList: newMainList,
+                      }
+                    : {
+                          ...state,
+                          peopleList: newPeopleList,
+                          loadedPeopleList: newPeopleList,
+                      };
+            }
+
             return {
                 ...state,
                 methodEvent: action.methodEvent,
@@ -254,19 +343,19 @@ const informationReducer = (state = initialState, action) => {
             }
             if (state.typeFilter === 'all') {
                 filterList = state.loadedMainList.filter((el) => {
-                    if (!el.person) {
-                        return false;
+                    let fullName = 'Не указано';
+                    if (el.person) {
+                        fullName = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
                     }
-                    const fullName = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
                     let allValue = `${fullName} ${parseDateTime(el.datetime)} ${
-                        el.person.people_id
+                        el.device_id
                     }`;
                     return allValue.includes(action.text);
                 });
             }
             if (state.typeFilter === 'number') {
                 filterList = state.loadedMainList.filter((user) =>
-                    `${user.people_id}`.includes(action.text)
+                    `${user.device_id}`.includes(action.text)
                 );
             }
             if (action.text === '') {
@@ -512,6 +601,8 @@ const informationReducer = (state = initialState, action) => {
             // console.log(action.mainList);
             return {
                 ...state,
+                peopleList: action.listPeople,
+                loadedPeopleList: action.listPeople,
                 mainList: action.mainList,
                 loadedMainList: action.mainList,
                 given: action.given,
@@ -635,6 +726,7 @@ export {
     titleSortList,
     setDateNow,
     getPeople,
+    setCounterInfo,
     titleSortListInventory,
     setChoosePerson,
     setVisibleInventory,

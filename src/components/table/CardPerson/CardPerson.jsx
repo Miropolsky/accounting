@@ -1,19 +1,19 @@
 import React from 'react';
 import styles from './CardPerson.module.scss';
 import CustomButton from '../../../UI/CustomButton/CustomButton';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import parseDateTime from '../../../common/dateParse';
 
 const CardPerson = (props) => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const acceptBtn = () => {
         alert('Успешная сдача');
         props.closeCard();
     };
 
-    const exchange = () => {
-        navigate('/inventory');
-    };
+    // const exchange = () => {
+    //     navigate('/inventory');
+    // };
 
     return (
         <div className={styles.container}>
