@@ -10,6 +10,7 @@ import {
     offSetting,
     setVisibleInventory,
     setListVisableInventory,
+    setEvent,
 } from '../../redux/informationReducer';
 const mapStateToProps = (state) => {
     return {
@@ -21,8 +22,8 @@ const mapStateToProps = (state) => {
         textInventory: state.informationPage.textFilterInventory,
         visibleSearch: state.informationPage.visibleSearch,
         visibleSetting: state.informationPage.visibleSetting,
-        choosePerson: state.informationPage.choosePerson,
         visibleInventory: state.informationPage.visibleInventory,
+        choosePerson: state.informationPage.choosePerson,
         chooseInventory: state.informationPage.chooseInventory,
     };
 };
@@ -37,6 +38,7 @@ const InformationContainer = connect(mapStateToProps, {
     setDateNow,
     setVisibleInventory,
     setListVisableInventory,
+    setEvent,
 })(Information);
 
 export default InformationContainer;

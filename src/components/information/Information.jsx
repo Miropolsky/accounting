@@ -20,6 +20,10 @@ export default function Information({
     const navigate = useNavigate();
     // console.log('render');
     const [isPageInventory, setIsPageInventory] = useState(false);
+    const [inventory, setInventory] = useState(null);
+    useEffect(() => {
+        setInventory(props.chooseInventory);
+    }, [props.chooseInventory]);
     useEffect(() => {
         if (pathname === '/inventory') {
             setIsPageInventory(true);
@@ -34,8 +38,14 @@ export default function Information({
     };
     const acceptBtn = () => {
         if (props.choosePerson !== null) {
+            props.setEvent({
+                methodEvent: null,
+                event: null,
+            });
             alert(
-                `${props.choosePerson.lastname} ${props.choosePerson.firstname} ${props.choosePerson.middlename} получил инвентарь`
+                `${props.choosePerson.lastname} ${props.choosePerson.firstname} ${props.choosePerson.middlename} получил инвентарь` +
+                    ` ${inventory.device_type === 1 ? 'Лыжи' : 'Палки'}` +
+                    ` №${inventory.device_number}`
             );
             navigate('/');
         }
@@ -100,9 +110,9 @@ export default function Information({
                     <div className={styles.titleInventory}>
                         Выдается инвентарь:{' '}
                         <span>
-                            {props.chooseInventory.device_type === 1 && 'Лыжи'}
-                            {props.chooseInventory.device_type === 0 && 'Палки'}
-                            {` №${props.chooseInventory.device_number}`}
+                            {inventory.device_type === 1 && 'Лыжи'}
+                            {inventory.device_type === 0 && 'Палки'}
+                            {` №${inventory.device_number}`}
                         </span>
                     </div>
                     <CustomButton

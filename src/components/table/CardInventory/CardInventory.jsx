@@ -5,11 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const CardInventory = (props) => {
     const navigate = useNavigate();
-    const acceptBtn = () => {
-        alert('Успешная выдача');
-        props.closeCard();
-    };
-    const [assignedPerson, setAssignedPerson] = useState(false);
+    const [assignedPerson, setAssignedPerson] = useState(null);
     // const [isFullComplect, setIsFullComplect] = useState(true);
     const isFullComplect = true;
     useEffect(() => {
@@ -20,6 +16,9 @@ const CardInventory = (props) => {
         // }, 5000);
     }, [props.elPeople]);
     const exchange = () => {
+        props.setIsCardInventory(false);
+        props.setChooseInventory(props.el);
+        // props.closeCardInventory();
         navigate('/inventory');
     };
 
@@ -37,7 +36,9 @@ const CardInventory = (props) => {
                 </div>
                 <div className={styles.valuesInfo}>
                     <div className={styles.valueInfo}>{props.el.device_id}</div>
-                    <div className={styles.valueInfo}>Лыжи</div>
+                    <div className={styles.valueInfo}>
+                        {props.el.device_type === 1 ? 'Лыжи' : 'Палки'}{' '}
+                    </div>
                     {/* <div className={styles.valueInfo}>
                         {isFullComplect ? 'Да' : 'Нет'}
                     </div> */}
@@ -54,17 +55,17 @@ const CardInventory = (props) => {
                 <div className={styles.valuesInfo}>
                     <div className={styles.valueInfo}>
                         {assignedPerson
-                            ? `${assignedPerson.person.lastname}`
+                            ? `${assignedPerson.lastname}`
                             : 'Не закреплен'}
                     </div>
                     <div className={styles.valueInfo}>
                         {assignedPerson
-                            ? `${assignedPerson.person.firstname}`
+                            ? `${assignedPerson.firstname}`
                             : 'Не закреплен'}
                     </div>
                     <div className={styles.valueInfo}>
                         {assignedPerson
-                            ? `${assignedPerson.person.middlename}`
+                            ? `${assignedPerson.middlename}`
                             : 'Не закреплен'}
                     </div>
                     <div className={styles.valueInfo}>{props.el.people_id}</div>
@@ -73,7 +74,19 @@ const CardInventory = (props) => {
             <div className={styles.buttons}>
                 {!props.isIssued.length ? (
                     <CustomButton
-                        onClick={() => alert('Выдача')}
+                        onClick={() => {
+                            alert(
+                                `${assignedPerson.lastname} ${assignedPerson.firstname} ${assignedPerson.middlename} получил ` +
+                                    `${
+                                        props.el.device_type === 1
+                                            ? 'Лыжи'
+                                            : 'Палки'
+                                    }` +
+                                    ` №${props.el.device_number}`
+                            );
+                            props.closeCard();
+                        }}
+                        disabled={!assignedPerson}
                         text='Выдать'
                         width={120}
                         height={50}
@@ -81,7 +94,18 @@ const CardInventory = (props) => {
                     />
                 ) : (
                     <CustomButton
-                        onClick={() => alert('сдача')}
+                        onClick={() => {
+                            alert(
+                                `${assignedPerson.lastname} ${assignedPerson.firstname} ${assignedPerson.middlename} сдал ` +
+                                    `${
+                                        props.el.device_type === 1
+                                            ? 'Лыжи'
+                                            : 'Палки'
+                                    }` +
+                                    ` №${props.el.device_number}`
+                            );
+                            props.closeCard();
+                        }}
                         text='Сдать'
                         width={120}
                         height={50}

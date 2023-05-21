@@ -259,18 +259,28 @@ const informationReducer = (state = initialState, action) => {
                 let person = findPeople(action.event.people_id);
                 let newMainList = state.loadedMainList.map((el) => {
                     if (el.device_id === action.event.device_id) {
-                        console.log('Изменен issued');
-                        isEdit = true;
-                        return {
-                            ...action.event,
-                            id: el.id,
-                            person: person,
-                        };
+                        if (action.event.is_out | action.event.in_mine) {
+                            isEdit = true;
+                            // console.log('Изменен issued');
+                            return {
+                                ...action.event,
+                                id: el.id,
+                                person: person,
+                            };
+                        }
                     }
+
                     return el;
                 });
-                if (!isEdit) {
-                    console.log('Добавлен issued');
+                if (!action.event.is_out && !action.event.in_mine) {
+                    // console.log('issued удален');
+                    isEdit = true;
+                    newMainList = newMainList.filter(
+                        (el) => el.device_id !== action.event.device_id
+                    );
+                }
+                if (!isEdit && action.event.is_out) {
+                    // console.log('Добавлен issued');
                     isEdit = true;
                     newMainList.push({
                         ...action.event,
@@ -289,7 +299,7 @@ const informationReducer = (state = initialState, action) => {
                 let isEditMainList = false;
                 let newPeopleList = state.loadedPeopleList.map((el) => {
                     if (el.people_id === action.event.people_id) {
-                        console.log('изменение people');
+                        // console.log('изменение people');
                         isEditPeople = true;
                         return {
                             ...action.event,
@@ -298,7 +308,7 @@ const informationReducer = (state = initialState, action) => {
                     return el;
                 });
                 if (!isEditPeople) {
-                    console.log('Добавление people');
+                    // console.log('Добавление people');
                     isEditPeople = true;
                     newPeopleList.push({ ...action.event });
                 }
@@ -444,6 +454,15 @@ const informationReducer = (state = initialState, action) => {
             if (action.title === 'number') {
                 sortList.sort((a, b) => a.people_id - b.people_id);
             }
+            if (action.title === 'inventory') {
+                sortList.sort((a, b) => {
+                    let inventA = a.device_type === 1 ? 'Лыжи' : 'Палки';
+                    inventA += ` ${a.device_number}`;
+                    let inventB = b.device_type === 1 ? 'Лыжи' : 'Палки';
+                    inventB += ` ${b.device_number}`;
+                    return inventA.localeCompare(inventB);
+                });
+            }
             if (action.title === 'name') {
                 sortList.sort((a, b) => {
                     let firstName;
@@ -464,6 +483,7 @@ const informationReducer = (state = initialState, action) => {
                     return firstName.localeCompare(secondName);
                 });
             }
+
             if (action.isReverse) {
                 sortList.reverse();
             }
@@ -565,15 +585,15 @@ const informationReducer = (state = initialState, action) => {
             let filterList;
             if (state.visibleInventory === 'listInventory') {
                 filterList = transformListInventery(
-                    state.tableList,
+                    state.loadedMainList,
                     action.listInvetory
                 );
             } else {
-                filterList = state.tableList;
+                filterList = state.loadedMainList;
             }
             return {
                 ...state,
-                filterList: [...filterList],
+                mainList: [...filterList],
                 listVisibleInventory: action.listInvetory,
             };
         }
@@ -635,20 +655,6 @@ const getIssued = () => {
     };
 };
 
-// const setEvent = (event) => {
-//     return {
-//         type: SET_EVENT,
-//         event,
-//     };
-// };
-// const connectWs = () => {
-//     return async (dispatch) => {
-//         wsApi.subscribe((event) => {
-//             dispatch(setEvent(event));
-//         });
-//     };
-// };
-
 const getMainList = () => {
     return async (dispatch) => {
         let resIsseud = await peopleApi.getIssued();
@@ -656,16 +662,10 @@ const getMainList = () => {
         dispatch(setMainList(resPeople.data, resIsseud.data));
         let resInvent = await peopleApi.getDevice();
         dispatch(setInventory(resInvent.data));
+        // let res = await peopleApi.getPeople();
+        // dispatch(setPeople(res.data));
     };
 };
-
-// const getPeopleList = () => {
-//     return async (dispatch) => {
-//         let resPeople = await peopleApi.getPeople();
-//         let resIsseud = await peopleApi.getIssued();
-//         dispatch(setPeopleList(resPeople.data, resIsseud.data));
-//     };
-// };
 
 function timeOver(time, dateNow, countHours) {
     // let curdate = new Date(2023, 1, 20, 16, 52); //test
@@ -690,26 +690,25 @@ function sortDate(a, b) {
 function transformListInventery(filterList, listVisibleInventory) {
     let newMas = [];
     filterList.forEach((user) => {
-        if (
-            user.inventory.length === 1 &&
-            listVisibleInventory.includes(user.inventory.nameInventory)
-        ) {
+        let invent = user.device_type === 1 ? 'Лыжи' : 'Палки';
+        if (listVisibleInventory.includes(invent)) {
             newMas.push({
                 ...user,
                 id: newMas.length + 1,
-                inventory: user.inventory,
-            });
-        } else {
-            user.inventory.forEach((invet) => {
-                if (listVisibleInventory.includes(invet.nameInventory)) {
-                    newMas.push({
-                        ...user,
-                        id: newMas.length + 1,
-                        inventory: [invet],
-                    });
-                }
+                inventory: invent,
             });
         }
+        // } else {
+        //     user.inventory.forEach((invet) => {
+        //         if (listVisibleInventory.includes(invet.nameInventory)) {
+        //             newMas.push({
+        //                 ...user,
+        //                 id: newMas.length + 1,
+        //                 inventory: [invet],
+        //             });
+        //         }
+        //     });
+        // }
     });
     return newMas;
 }

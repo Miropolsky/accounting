@@ -17,14 +17,12 @@ const Table = React.memo((props) => {
     //     }, 5000);
     //     // eslint-disable-next-line
     // }, []);
-    // useEffect(() => {
-    //     console.log(props.inventoryEvent);
-    //     if (props.methodEvent === 'issued' && props.inventoryEvent) {
-    //         setIsCardInventory(true);
-    //     }
-    //     setIsCardInventory(true);
-    //     eslint-disable-next-line
-    // }, [props.inventoryEvent]);
+    useEffect(() => {
+        if (props.methodEvent === 'issued_event' && props.inventoryEvent) {
+            setIsCardInventory(true);
+        }
+        //eslint-disable-next-line
+    }, [props.inventoryEvent]);
 
     useEffect(() => {
         if (props.visibleSearch) {
@@ -53,15 +51,25 @@ const Table = React.memo((props) => {
     const closeCardPerson = () => {
         setIsCardPerson(false);
         setIdCard(null);
-        props.setChooseInventory(null);
     };
     const closeCardInventory = () => {
         setIsCardInventory(false);
-        props.setChooseInventory(null);
     };
     function findInventory(peopleId) {
         const invent = props.inventoryList.filter(
             (el) => el.people_id === peopleId
+        );
+        return invent;
+    }
+    function findInventoryInInvent(deviceId) {
+        const invent = props.inventoryList.filter(
+            (el) => el.device_id === deviceId
+        );
+        return invent;
+    }
+    function findPeopleInListPeople(people_id) {
+        const invent = props.peopleList.find(
+            (el) => el.people_id === people_id
         );
         return invent;
     }
@@ -93,34 +101,16 @@ const Table = React.memo((props) => {
                     )}
                     {isCardInventory && (
                         <CardInventory
-                            elPeople={props.mainList.find(
-                                (p) =>
-                                    p.people_id ===
-                                    props.inventoryEvent.people_id
+                            // closeCardInventory={closeCardInventory}
+                            elPeople={findPeopleInListPeople(
+                                props.inventoryEvent.people_id
                             )}
-                            el={{
-                                people_id: 3166593488477184,
-                                device_id: 8936830511382528,
-                                device_type: 1,
-                                datetime: '2023-02-20T08:52:45',
-                                parent_device_id: null,
-                                parent_device_type: null,
-                                in_mine: true,
-                                is_out: false,
-                                level: 1,
-                                person: {
-                                    people_id: 3166593488477184,
-                                    device_type: 1,
-                                    device_number: '4315',
-                                    parent_device_id: null,
-                                    params: {},
-                                    device_id: 8936830511382528,
-                                    room_number: 1,
-                                    device_serial: 4315,
-                                    parent_device_type: null,
-                                },
-                            }}
-                            isIssued={findInventoryInMain(8936830511382528)}
+                            setIsCardInventory={setIsCardInventory}
+                            el={props.inventoryEvent}
+                            isIssued={findInventoryInMain(
+                                props.inventoryEvent.device_id
+                            )}
+                            setChooseInventory={props.setChooseInventory}
                             // el={props.inventoryEvent}
                             closeCard={closeCardInventory}
                         />
@@ -136,7 +126,6 @@ const Table = React.memo((props) => {
                                 mainList: props.mainList,
                                 inventoryList: props.inventoryList,
                                 openCardPerson: openCardPerson,
-                                setChooseInventory: props.setChooseInventory,
                                 setChoose: setChoose,
                                 idCard,
                             }}
@@ -154,17 +143,14 @@ const Table = React.memo((props) => {
 
 const Row = (props) => {
     const { data, index, style } = props;
-    const {
-        setChoose,
-        openCardPerson,
-        idCard,
-        mainList,
-        inventoryList,
-        setChooseInventory,
-    } = data;
+    const { setChoose, openCardPerson, idCard, mainList, inventoryList } = data;
     const el = mainList[index];
     function findInventory(deviceId) {
         const invent = inventoryList.filter((el) => el.device_id === deviceId);
+        // if (el.id > 5 && el.id < 10) {
+        //     invent[0] = { ...invent[0], device_type: 0 };
+        //     return invent;
+        // }
         return invent;
     }
     const inventory = findInventory(el.device_id);
@@ -181,8 +167,6 @@ const Row = (props) => {
             onDoubleClick={() => {
                 if (nameUser !== 'Не найден') {
                     openCardPerson(el.people_id);
-                    if (inventory.length !== 0)
-                        setChooseInventory(inventory[0]);
                 }
             }}
             onClick={() => {
@@ -194,6 +178,7 @@ const Row = (props) => {
             <LineTable
                 isChoose={idCard && idCard === el.device_id}
                 id={el.id}
+                index={el.id}
                 time={el.datetime}
                 num={el.device_id}
                 name={nameUser}

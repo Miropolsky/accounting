@@ -89,6 +89,7 @@ const mapStateToProps = (state) => {
         inventoryEvent: state.informationPage.elEvent,
         methodEvent: state.informationPage.methodEvent,
         timeNow: state.informationPage.timeNow,
+        peopleList: state.informationPage.peopleList,
     };
 };
 

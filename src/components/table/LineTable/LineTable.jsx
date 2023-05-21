@@ -83,7 +83,7 @@ export default function LineTable(props) {
                 </>
             ) : (
                 <div>
-                    <div className={styles.lineId}>{props.id}</div>
+                    <div className={styles.lineId}>{props.index}</div>
                     <div className={styles.lineTime}>
                         {parseDateTime(props.time)}
                     </div>
