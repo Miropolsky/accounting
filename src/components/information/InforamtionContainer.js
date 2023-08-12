@@ -6,11 +6,13 @@ import {
     toggleSearch,
     setTypeFilter,
     setDateNow,
+    giveDevice,
     toggleSetting,
     offSetting,
     setVisibleInventory,
     setListVisableInventory,
     setEvent,
+    createPeople,
 } from '../../redux/informationReducer';
 const mapStateToProps = (state) => {
     return {
@@ -39,6 +41,8 @@ const InformationContainer = connect(mapStateToProps, {
     setVisibleInventory,
     setListVisableInventory,
     setEvent,
+    createPeople,
+    giveDevice,
 })(Information);
 
 export default InformationContainer;

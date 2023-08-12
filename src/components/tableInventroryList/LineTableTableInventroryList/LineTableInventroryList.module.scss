@@ -3,19 +3,52 @@
     display: flex;
     width: 100%;
     background-color: white;
+    z-index: 998;
+    &:hover{
+        background-color: rgb(209, 209, 209);
+    }
+    div{
+        display: flex;
+        width: 100%;
+    }
     .lineId{
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 90px;
+        width: 80px;
         border-bottom: 1px solid black;
         span{
             cursor: pointer;
         }
     }
+    .lineTime{
+        width: 260px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+        border-top: none;
+        span{
+            cursor: pointer;
+        }
+        
+    }
     
     .lineNum{
-        width: 500px;
+        width: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+        border-top: none;
+        border-left: none;
+        span{
+            cursor: pointer;
+        }
+    }
+    .lineInventory{
+        width: calc(100% - 920px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -28,21 +61,25 @@
     }
     
     .lineName{
-        width: calc(100% - 588px);
-        
+        width: 300px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid black;
-        border-top: none;
-        border-right: none;
+        border-bottom: 1px solid black;
         span{
             cursor: pointer;
         }
     }
-    .inventoryName{
-        margin-left: 5px;
-    }
+}
+
+
+
+.containerRed{
+    background-color: rgb(249, 155, 155);
+}
+
+.containerYellow{
+    background-color: rgb(241, 241, 160);
 }
 
 .containerChoose{
@@ -60,15 +97,23 @@
             text-align: center;
             width: 50px;
         }
+        .lineTime{
+            text-align: center;
+            width: 80px;      
+        }
         
         .lineNum{
             text-align: center;
-            width: 140px;
+            width: 120px;
+        }
+        .lineInventory{
+            text-align: center;
+            width: calc(100% - 340px);
         }
         
         .lineName{
             text-align: center;
-            width: calc(100% - 190px);
+            width: 90px;
         }
     }
 }

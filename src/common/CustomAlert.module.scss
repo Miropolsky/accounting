@@ -1,0 +1,32 @@
+.container{
+    padding: 10px 30px 0 30px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    z-index: 10001;
+    left: 30%;
+    top: 60px;
+    background-color: rgb(236, 243, 249);
+    width: 500px;
+    border: 1px solid black;
+    .titleName{
+        margin-top: 5px;
+        font-size: 24px;
+        text-align: center;
+    }
+    .lineGray{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height: 1px;
+        background-color: gray;
+        opacity: 0.2;
+    }
+    .btns{
+        margin-top: 80px;
+        display: flex;
+        justify-content: space-around;
+        column-gap: 60px;
+        margin-bottom: 20px;
+    }
+   
+}

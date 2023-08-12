@@ -7,6 +7,13 @@ import parseDateTime from '../../../common/dateParse';
 const CardPerson = (props) => {
     // const navigate = useNavigate();
     const acceptBtn = () => {
+        props.receiveDevice(props.el.people_id, props.inventory[0].device_id);
+        // props.setEvent({
+        //     method: 'device_receive',
+        //     event: {
+        //         device_id: props.inventory[0].device_id,
+        //     },
+        // });
         alert('Успешная сдача');
         props.closeCard();
     };
@@ -56,13 +63,25 @@ const CardPerson = (props) => {
             <div className={styles.lineGray}></div>
             <div className={styles.infoPerson}>
                 <div className={styles.namesInfo}>
-                    <div className={styles.nameInfo}>Ф.И.О</div>
+                    <div className={styles.nameInfo}>Фамилия</div>
+                    <div className={styles.nameInfo}>Имя</div>
+                    <div className={styles.nameInfo}>Отчество</div>
                     <div className={styles.nameInfo}>Время выдачи</div>
                 </div>
                 <div className={styles.valuesInfo}>
                     <div className={styles.valueInfo}>
                         {props.el.person && props.el.person.lastname
-                            ? `${props.el.person.lastname} ${props.el.person.firstname} ${props.el.person.middlename}`
+                            ? `${props.el.person.lastname}`
+                            : 'Не указано'}
+                    </div>
+                    <div className={styles.valueInfo}>
+                        {props.el.person && props.el.person.lastname
+                            ? `${props.el.person.firstname}`
+                            : 'Не указано'}
+                    </div>
+                    <div className={styles.valueInfo}>
+                        {props.el.person && props.el.person.lastname
+                            ? `${props.el.person.middlename}`
                             : 'Не указано'}
                     </div>
                     <div className={styles.valueInfo}>
@@ -76,7 +95,7 @@ const CardPerson = (props) => {
                 <CustomButton
                     onClick={acceptBtn}
                     text='Принять'
-                    width={120}
+                    width={'30%'}
                     height={50}
                     color='yellow'
                 />
@@ -95,7 +114,7 @@ const CardPerson = (props) => {
                 <CustomButton
                     onClick={props.closeCard}
                     text='Отмена'
-                    width={120}
+                    width={'30%'}
                     height={50}
                     color='#E8E8E8'
                 />

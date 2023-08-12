@@ -1,7 +1,13 @@
 .btn{
     outline: none;
     // border: 1px solid gray;
-    font-size: 18px;
+    font-size: 1.3rem;
     border-radius: 3px;
     cursor: pointer;
+}
+
+@media only screen and (max-device-width: 500px) {
+    .btn{
+        font-size: 1rem;
+    }
 }

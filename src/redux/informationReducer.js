@@ -22,6 +22,7 @@ const SET_MAIN_LIST = 'SET_MAIN_LIST';
 // const SET_MINE = 'SET_MINE';
 // const SET_OUT = 'SET_OUT';
 const SET_EVENT = 'SET_EVENT';
+const UPDATE_MAIN_LIST = 'UPDATE_MAIN_LIST';
 
 const initialState = {
     given: 0,
@@ -196,8 +197,17 @@ const setMainList = (listPeople, listIssued) => {
     };
 };
 
+const updateMainList = () => {
+    return {
+        type: UPDATE_MAIN_LIST,
+    };
+};
+
 const informationReducer = (state = initialState, action) => {
     switch (action.type) {
+        case UPDATE_MAIN_LIST: {
+            return { ...state, mainList: state.loadedMainList };
+        }
         // case SET_GIVEN: {
         //     return {
         //         ...state,
@@ -222,6 +232,7 @@ const informationReducer = (state = initialState, action) => {
             let countOnSurface = 0;
             let violators = 0;
             state.mainList.forEach((el) => {
+                countGiven++;
                 if (el.in_mine) {
                     countOnMountain++;
                     if (!el.is_out) {
@@ -230,9 +241,6 @@ const informationReducer = (state = initialState, action) => {
                 }
                 if (!el.in_mine) {
                     countOnSurface++;
-                }
-                if (el.is_out) {
-                    countGiven++;
                 }
             });
             return {
@@ -253,36 +261,79 @@ const informationReducer = (state = initialState, action) => {
                 }
                 return people[0];
             }
-            console.log(action.event);
+            function findInventory(deviceId) {
+                const people = state.inventoryList.filter(
+                    (inventory) => inventory.device_id === deviceId
+                );
+                if (people.length === 0) {
+                    return null;
+                }
+                return {
+                    ...people[0],
+                    person: findPeople(people[0].people_id),
+                };
+            }
+
+            if (action.methodEvent === 'people_delete') {
+                let newMainList = state.peopleList.filter(
+                    (el) => el.id !== +action.event.people_id
+                );
+                console.log(+action.event.people_id);
+                console.log(newMainList);
+                console.log(state.peopleList);
+                return {
+                    ...state,
+                    peopleList: newMainList,
+                };
+            }
+            // if (action.methodEvent === 'people_create') {
+            //     let res = peopleApi
+            //         .findPeople(action.event.people_id)
+            //         .then((res) => res.data);
+            //     let person;
+            //     res.then(async (res) => {
+            //         console.log(res);
+            //         person = res;
+            //     });
+            //     console.log(person);
+            //     return {
+            //         ...state,
+            //         peopleList: [...state.peopleList, person],
+            //     };
+            // }
             if (action.methodEvent === 'issued') {
                 let isEdit = false;
                 let person = findPeople(action.event.people_id);
                 let newMainList = state.loadedMainList.map((el) => {
-                    if (el.device_id === action.event.device_id) {
+                    if (el.device_id === +action.event.device_id) {
                         if (action.event.is_out | action.event.in_mine) {
                             isEdit = true;
-                            // console.log('Изменен issued');
                             return {
                                 ...action.event,
+                                datetime: action.event.datetime.replaceAll(
+                                    ' ',
+                                    ''
+                                ),
                                 id: el.id,
-                                person: person,
+                                person,
                             };
                         }
                     }
 
                     return el;
                 });
+                console.log(newMainList[0]);
                 if (!action.event.is_out && !action.event.in_mine) {
                     // console.log('issued удален');
                     isEdit = true;
                     newMainList = newMainList.filter(
-                        (el) => el.device_id !== action.event.device_id
+                        (el) => el.device_id !== +action.event.device_id
                     );
                 }
                 if (!isEdit && action.event.is_out) {
                     // console.log('Добавлен issued');
                     isEdit = true;
-                    newMainList.push({
+                    newMainList.unshift({
                         ...action.event,
                         id: state.loadedMainList.length,
                         person: person,
@@ -292,6 +343,41 @@ const informationReducer = (state = initialState, action) => {
                     ...state,
                     // mainList: newMainList,
                     loadedMainList: newMainList,
+                };
+            }
+            if (action.methodEvent === 'device_receive') {
+                // console.log(state.loadedMainList);
+                // console.log(+action.event.device_id);
+                console.log('device RECEIVE');
+                let newMas = state.loadedMainList.filter(
+                    (el) => el.device_id !== +action.event.device_id
+                );
+                newMas = newMas.map((el, i) => {
+                    return { ...el, id: i };
+                });
+                console.log(newMas);
+                return {
+                    ...state,
+                    loadedMainList: newMas,
+                };
+            }
+            if (action.methodEvent === 'device_give') {
+                let newMas = [...state.loadedMainList];
+                console.log('GIVE');
+                let el = findInventory(+action.event.device_id);
+
+                newMas.unshift({
+                    ...el,
+                    id: 0,
+                    datetime: new Date(),
+                });
+                newMas = newMas.map((el, i) => {
+                    return { ...el, id: i };
+                });
+                return {
+                    ...state,
+                    // mainList: newMas,
+                    loadedMainList: newMas,
                 };
             }
             if (action.methodEvent === 'people') {
@@ -310,6 +396,13 @@ const informationReducer = (state = initialState, action) => {
                 if (!isEditPeople) {
                     // console.log('Добавление people');
                     isEditPeople = true;
+                    if (
+                        newPeopleList.find(
+                            (person) => person.id === action.event.id
+                        )
+                    ) {
+                        console.log('уже добавлен');
+                    }
                     newPeopleList.push({ ...action.event });
                 }
                 let newMainList = state.loadedMainList.map((el) => {
@@ -655,6 +748,36 @@ const getIssued = () => {
     };
 };
 
+const giveDevice = (people_id, device_id) => {
+    return async (dispatch) => {
+        let res = await peopleApi.giveDevice(people_id, device_id);
+    };
+};
+const receiveDevice = (people_id, device_id) => {
+    return async (dispatch) => {
+        let res = await peopleApi.receiveDevice(people_id, device_id);
+    };
+};
+
+const deletePeople = (id) => {
+    return async (dispatch) => {
+        let res = await peopleApi.deletePeople(id);
+    };
+};
+
+const createPeople = (firstName, middleName, secondName) => {
+    return async (dispatch) => {
+        let res = await peopleApi.addPeople(firstName, middleName, secondName);
+        getPeople()(dispatch);
+    };
+};
+const editPerson = (person) => {
+    return async (dispatch) => {
+        let res = await peopleApi.editPerson(person);
+        // getPeople()(dispatch);
+    };
+};
+
 const getMainList = () => {
     return async (dispatch) => {
         let resIsseud = await peopleApi.getIssued();
@@ -719,12 +842,16 @@ export {
     toggleSearch,
     toggleSetting,
     offSetting,
+    giveDevice,
+    receiveDevice,
     textFilter,
     textFilterInventory,
     setTypeFilter,
     titleSortList,
     setDateNow,
     getPeople,
+    editPerson,
+    createPeople,
     setCounterInfo,
     titleSortListInventory,
     setChoosePerson,
@@ -734,4 +861,6 @@ export {
     getIssued,
     setChooseInventory,
     setEvent,
+    updateMainList,
+    deletePeople,
 };

@@ -41,11 +41,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        
-
         .searchBlock{
             display: flex;
+            align-items: center;
             column-gap: 10px;
             width: 300px;
             z-index: 10001;
@@ -61,6 +59,20 @@
                 img{
                     width: 28px;
                     height: 28px;
+                    cursor: pointer;
+                }
+            }
+            .addPeople{
+                img{
+                    width: 35px;
+                    height: 35px;
+                    cursor: pointer;
+                }
+            }
+            .addInventory{
+                img{
+                    width: 35px;
+                    height: 35px;
                     cursor: pointer;
                 }
             }
@@ -80,6 +92,96 @@
             column-gap: 30px;
             color: white;
             font-size: 20px;
+        }
+    }
+}
+
+
+@media only screen and (max-device-width: 500px) {
+    .container{
+        .sideMenu{
+            position: absolute;
+        }
+        .infoInventory{
+            display: flex;
+            justify-content: space-between;
+            margin: 10px;
+            .titleInventory{
+                width: 300px;
+                font-size: 18px;
+            }
+        }
+        .inputBlock{
+            margin-left: 5%;
+            margin-right: 5%;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            height: 30px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            select{
+                font-size: 8px;
+                width: 120px;
+                font-size: 13px;
+                option{
+                    font-size: 12px;
+                    text-align: center;
+                }
+            }
+            input{
+                height: 25px;
+                width: 100%;
+                outline: none;
+            }
+            input::placeholder {
+                font-size: 12px;
+                padding-left: 5px;
+            }
+        }
+        .content{
+            display: flex;
+            justify-content: space-between;
+            // align-items: center;  
+    
+            .searchBlock{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 30px;
+                z-index: 10001;
+                margin-left: 15px;
+                .searchImg{
+                    margin-top: 15px;
+                    img{
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+                .settingImg{
+                    img{
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+            }
+            .time{
+                display: flex;
+                font-size: 14px;
+                justify-content: flex-end;
+                width: 80px;
+                margin-right: 5px;
+                color: white;
+            }
+            .content_line{
+                width: 280px;
+                margin-top: 20px;
+                column-gap: 10px;
+                color: white;
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
         }
     }
 }

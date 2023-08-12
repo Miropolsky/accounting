@@ -3,7 +3,7 @@ import { authApi } from '../api/api';
 const SET_AUTH = 'SET_AUTH';
 const SET_ERROR = 'SET_ERROR';
 const initialState = {
-    isAuth: false,
+    isAuth: true,
     errorAuth: '',
 };
 

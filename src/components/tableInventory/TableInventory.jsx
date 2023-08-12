@@ -50,23 +50,6 @@ export default function TableInventory(props) {
                         </FixedSizeList>
                     )}
                 </AutoSizer>
-                {/* {props.tableList.map((el) => {
-                    return (
-                        <LineTableInventory
-                            setChoosePerson={props.setChoosePerson}
-                            setChoose={setChoose}
-                            isChoose={idChoose && idChoose === el.id}
-                            el={el}
-                            key={el.id}
-                            id={el.id}
-                            num={el.num}
-                            inventory={el.inventory}
-                            name={el.name}
-                            isTimeOver={el.isTimeOver}
-                            isMountain={el.isMountain}
-                        />
-                    );
-                })} */}
             </div>
         </div>
     );

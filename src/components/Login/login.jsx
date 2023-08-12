@@ -1,12 +1,10 @@
 import { Field, Form, Formik } from 'formik';
 import { validate } from '../../common/validate';
 import styles from './Login.module.scss';
-import Alert from './Alert';
 
 export default function Login(props) {
     return (
         <div className={styles.container}>
-            <Alert text='daskdmas' />
             <Formik
                 initialValues={{
                     login: '',

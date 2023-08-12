@@ -7,7 +7,7 @@ const CardInventory = (props) => {
     const navigate = useNavigate();
     const [assignedPerson, setAssignedPerson] = useState(null);
     // const [isFullComplect, setIsFullComplect] = useState(true);
-    const isFullComplect = true;
+    // const isFullComplect = true;
     useEffect(() => {
         setAssignedPerson(props.elPeople);
         // setAssignedPerson(true);
@@ -68,7 +68,11 @@ const CardInventory = (props) => {
                             ? `${assignedPerson.middlename}`
                             : 'Не закреплен'}
                     </div>
-                    <div className={styles.valueInfo}>{props.el.people_id}</div>
+                    <div className={styles.valueInfo}>
+                        {props.el.people_id
+                            ? props.el.people_id
+                            : 'Не закреплен'}
+                    </div>
                 </div>
             </div>
             <div className={styles.buttons}>
@@ -84,30 +88,48 @@ const CardInventory = (props) => {
                                     }` +
                                     ` №${props.el.device_number}`
                             );
+                            props.giveDevice(
+                                assignedPerson.people_id,
+                                props.el.device_id
+                            );
                             props.closeCard();
                         }}
                         disabled={!assignedPerson}
                         text='Выдать'
-                        width={120}
+                        width={'25%'}
                         height={50}
                         color='#50F255'
                     />
                 ) : (
                     <CustomButton
                         onClick={() => {
-                            alert(
-                                `${assignedPerson.lastname} ${assignedPerson.firstname} ${assignedPerson.middlename} сдал ` +
-                                    `${
+                            if (assignedPerson) {
+                                alert(
+                                    `${assignedPerson.lastname} ${assignedPerson.firstname} ${assignedPerson.middlename} сдал ` +
+                                        `${
+                                            props.el.device_type === 1
+                                                ? 'Лыжи'
+                                                : 'Палки'
+                                        }` +
+                                        ` №${props.el.device_number}`
+                                );
+                            } else {
+                                alert(
+                                    `инвентарь ${
                                         props.el.device_type === 1
                                             ? 'Лыжи'
                                             : 'Палки'
-                                    }` +
-                                    ` №${props.el.device_number}`
+                                    } №${props.el.device_number} сдан`
+                                );
+                            }
+                            props.receiveDevice(
+                                assignedPerson.people_id,
+                                props.el.device_id
                             );
                             props.closeCard();
                         }}
                         text='Сдать'
-                        width={120}
+                        width={'25%'}
                         height={50}
                         color='#50F255'
                     />
@@ -115,7 +137,7 @@ const CardInventory = (props) => {
 
                 <CustomButton
                     text='Взамен'
-                    width={120}
+                    width={'25%'}
                     height={50}
                     color='#ff7c7c'
                     disabled={props.isIssued.length}
@@ -124,7 +146,7 @@ const CardInventory = (props) => {
                 <CustomButton
                     onClick={props.closeCard}
                     text='Отмена'
-                    width={120}
+                    width={'25%'}
                     height={50}
                     color='#E8E8E8'
                 />

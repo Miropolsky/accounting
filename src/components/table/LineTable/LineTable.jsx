@@ -12,7 +12,7 @@ export default function LineTable(props) {
     // const toggleChoose = () => {
     //     setIsChoose(!isChoose);
     // };
-    // console.log(props);
+    // console.log(props.time);
     return (
         <div
             className={`${styles.container} ${

@@ -20,6 +20,7 @@
     }
     .lineTime{
         width: 200px;
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -80,4 +81,36 @@
 
 .containerChoose{
     background-color: rgb(176, 206, 233);
+}
+
+@media only screen and (max-device-width: 500px) {
+    .container{
+        span{
+            font-size: 13px;
+        }
+        width: 100%;
+        font-size: 12px;
+        .lineId{
+            text-align: center;
+            width: 50px;
+        }
+        .lineTime{
+            text-align: center;
+            width: 80px;      
+        }
+        
+        .lineNum{
+            text-align: center;
+            width: 120px;
+        }
+        .lineInventory{
+            text-align: center;
+            width: calc(100% - 340px);
+        }
+        
+        .lineName{
+            text-align: center;
+            width: 90px;
+        }
+    }
 }

@@ -2,12 +2,18 @@
 import styles from './Information.module.scss';
 import serachImg from '../../assets/img/search.svg';
 import setting from '../../assets/img/setting.svg';
+import plus from '../../assets/img/plus.svg';
+import addInventory from '../../assets/img/addInventory.svg';
 // import customDate from './customDate';
 import CustomDate from './customDate';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CustomButton from '../../UI/CustomButton/CustomButton';
 import SideMenu from '../sideMenu/SideMenu';
+// import CustomAlert from '../../common/CustomAlert';
+import NavigationMenu from '../navigationMenu/NavigationMenu';
+import CardAddPerson from '../tablePeople/CardAddPerson/CardAddPerson';
+import CardAddInventory from '../tableInventroryList/CardAddInventory/CardAddInventory';
 
 export default function Information({
     offSetting,
@@ -20,6 +26,10 @@ export default function Information({
     const navigate = useNavigate();
     // console.log('render');
     const [isPageInventory, setIsPageInventory] = useState(false);
+    const [isPagePeopleList, setIsPagePeopleList] = useState(false);
+    const [isPageInventoryList, setIsPageInventoryList] = useState(false);
+    const [isCardAddPerson, setIsCardAddPerson] = useState(false);
+    const [isCardAddInventory, setIsCardAddInventory] = useState(false);
     const [inventory, setInventory] = useState(null);
     useEffect(() => {
         setInventory(props.chooseInventory);
@@ -30,6 +40,16 @@ export default function Information({
         } else {
             offSetting(false);
             setIsPageInventory(false);
+        }
+        if (pathname === '/peopleList') {
+            setIsPagePeopleList(true);
+        } else {
+            setIsPagePeopleList(false);
+        }
+        if (pathname === '/inventoryList') {
+            setIsPageInventoryList(true);
+        } else {
+            setIsPageInventoryList(false);
         }
     }, [pathname, offSetting]);
 
@@ -47,6 +67,9 @@ export default function Information({
                     ` ${inventory.device_type === 1 ? 'Лыжи' : 'Палки'}` +
                     ` №${inventory.device_number}`
             );
+            console.log(props.choosePerson);
+            console.log(inventory);
+            props.giveDevice(props.choosePerson.people_id, inventory.device_id);
             navigate('/');
         }
     };
@@ -60,6 +83,7 @@ export default function Information({
                     toggleSetting={props.toggleSetting}
                 />
             )}
+            <NavigationMenu />
             <div className={styles.content}>
                 <div className={styles.searchBlock}>
                     {/* {isPageInventory && ( */}
@@ -82,6 +106,24 @@ export default function Information({
                             onClick={() => props.toggleSearch()}
                         />
                     </div>
+                    {isPagePeopleList && (
+                        <div className={styles.addPeople}>
+                            <img
+                                src={plus}
+                                alt='addPeople'
+                                onClick={() => setIsCardAddPerson(true)}
+                            />
+                        </div>
+                    )}
+                    {isPageInventoryList && (
+                        <div className={styles.addInventory}>
+                            <img
+                                src={addInventory}
+                                alt='addInventory'
+                                onClick={() => setIsCardAddInventory(true)}
+                            />
+                        </div>
+                    )}
                 </div>
                 <div>
                     <div className={styles.content_line}>
@@ -158,6 +200,17 @@ export default function Information({
                     )}
                 </div>
             ) : null}
+            {isCardAddPerson && (
+                <CardAddPerson
+                    createPeople={props.createPeople}
+                    closeCard={() => setIsCardAddPerson(false)}
+                />
+            )}
+            {isCardAddInventory && (
+                <CardAddInventory
+                    closeCard={() => setIsCardAddInventory(false)}
+                />
+            )}
         </div>
     );
 }

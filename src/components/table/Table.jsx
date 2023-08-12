@@ -5,6 +5,7 @@ import LineTable from './LineTable/LineTable';
 import styles from './Table.module.scss';
 import React, { useEffect, useState } from 'react';
 import { FixedSizeList } from 'react-window';
+import CustomAlert from '../../common/CustomAlert';
 
 const Table = React.memo((props) => {
     // console.log(props.timeNow);
@@ -26,12 +27,12 @@ const Table = React.memo((props) => {
 
     useEffect(() => {
         if (props.visibleSearch) {
-            setCustomHeight(220);
+            setCustomHeight(270);
         } else {
-            setCustomHeight(160);
+            setCustomHeight(210);
         }
     }, [props.visibleSearch]);
-    const [customHeight, setCustomHeight] = useState(160);
+    const [customHeight, setCustomHeight] = useState(210);
     const [isCardPerson, setIsCardPerson] = useState(false);
     const [isCardInventory, setIsCardInventory] = useState(false);
     const [idCard, setIdCard] = useState(null);
@@ -56,10 +57,9 @@ const Table = React.memo((props) => {
         setIsCardInventory(false);
     };
     function findInventory(peopleId) {
-        const invent = props.inventoryList.filter(
-            (el) => el.people_id === peopleId
-        );
-        return invent;
+        const invent = props.mainList.find((el) => el.people_id === +peopleId);
+        const device_id = invent.device_id;
+        return device_id;
     }
     function findInventoryInInvent(deviceId) {
         const invent = props.inventoryList.filter(
@@ -92,15 +92,24 @@ const Table = React.memo((props) => {
                 <div className={styles.card}>
                     {isCardPerson && (
                         <CardPerson
+                            setEvent={props.setEvent}
+                            giveDevice={props.giveDevice}
+                            receiveDevice={props.receiveDevice}
                             closeCard={closeCardPerson}
                             el={props.mainList.find(
                                 (p) => p.people_id === idCard
                             )}
-                            inventory={findInventory(idCard)}
+                            // device_id={}
+                            inventory={findInventoryInInvent(
+                                findInventory(idCard)
+                            )}
                         />
                     )}
                     {isCardInventory && (
                         <CardInventory
+                            setEvent={props.setEvent}
+                            giveDevice={props.giveDevice}
+                            receiveDevice={props.receiveDevice}
                             // closeCardInventory={closeCardInventory}
                             elPeople={findPeopleInListPeople(
                                 props.inventoryEvent.people_id
@@ -147,10 +156,6 @@ const Row = (props) => {
     const el = mainList[index];
     function findInventory(deviceId) {
         const invent = inventoryList.filter((el) => el.device_id === deviceId);
-        // if (el.id > 5 && el.id < 10) {
-        //     invent[0] = { ...invent[0], device_type: 0 };
-        //     return invent;
-        // }
         return invent;
     }
     const inventory = findInventory(el.device_id);
@@ -165,8 +170,8 @@ const Row = (props) => {
         <div
             style={style}
             onDoubleClick={() => {
-                if (nameUser !== 'Не найден') {
-                    openCardPerson(el.people_id);
+                if (el) {
+                    openCardPerson(el?.people_id);
                 }
             }}
             onClick={() => {

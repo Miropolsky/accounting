@@ -21,7 +21,6 @@ const mapStateToProps = (state) => {
         visibleSearch: state.informationPage.visibleSearch,
         peopleList: state.informationPage.peopleList,
         chooseInventory: state.informationPage.chooseInventory,
-        // timeNow: state.informationPage.timeNow,
     };
 };
 

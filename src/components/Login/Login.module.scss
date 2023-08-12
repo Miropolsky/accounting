@@ -61,3 +61,27 @@
         cursor: pointer;
     }
 }
+
+@media only screen and (max-device-width: 500px) {
+    .container{
+
+        form{
+            height: 320px;
+            width: 200px;
+        }
+
+        input{
+            height: 50px;
+            width: 190px;
+        }
+        
+    
+        .btn{
+            margin-top: 40px;
+            width: 200px;
+        }
+    }
+     
+    
+}
+    
