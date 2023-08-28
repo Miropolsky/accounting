@@ -14,6 +14,8 @@ import SideMenu from '../sideMenu/SideMenu';
 import NavigationMenu from '../navigationMenu/NavigationMenu';
 import CardAddPerson from '../tablePeople/CardAddPerson/CardAddPerson';
 import CardAddInventory from '../tableInventroryList/CardAddInventory/CardAddInventory';
+import CustomAlert from '../../common/CustomAlert';
+import { CustomWindow } from '../../common/CustomWindow';
 
 export default function Information({
     offSetting,
@@ -26,20 +28,28 @@ export default function Information({
     const navigate = useNavigate();
     // console.log('render');
     const [isPageInventory, setIsPageInventory] = useState(false);
+    const [isPageMain, setIsPageMain] = useState(false);
     const [isPagePeopleList, setIsPagePeopleList] = useState(false);
     const [isPageInventoryList, setIsPageInventoryList] = useState(false);
     const [isCardAddPerson, setIsCardAddPerson] = useState(false);
     const [isCardAddInventory, setIsCardAddInventory] = useState(false);
+    const [isAddPerson, setIsAddPerson] = useState(false);
     const [inventory, setInventory] = useState(null);
     useEffect(() => {
         setInventory(props.chooseInventory);
     }, [props.chooseInventory]);
     useEffect(() => {
+        props.toggleSearch(false);
         if (pathname === '/inventory') {
             setIsPageInventory(true);
         } else {
             offSetting(false);
             setIsPageInventory(false);
+        }
+        if (pathname === '/') {
+            setIsPageMain(true);
+        } else {
+            setIsPageMain(false);
         }
         if (pathname === '/peopleList') {
             setIsPagePeopleList(true);
@@ -58,18 +68,23 @@ export default function Information({
     };
     const acceptBtn = () => {
         if (props.choosePerson !== null) {
+            props.giveDevice(props.choosePerson.people_id, inventory.device_id);
             props.setEvent({
                 methodEvent: null,
                 event: null,
             });
-            alert(
+            props.setTextAlert(
                 `${props.choosePerson.lastname} ${props.choosePerson.firstname} ${props.choosePerson.middlename} получил инвентарь` +
                     ` ${inventory.device_type === 1 ? 'Лыжи' : 'Палки'}` +
                     ` №${inventory.device_number}`
             );
-            console.log(props.choosePerson);
-            console.log(inventory);
-            props.giveDevice(props.choosePerson.people_id, inventory.device_id);
+            // alert(
+            //     `${props.choosePerson.lastname} ${props.choosePerson.firstname} ${props.choosePerson.middlename} получил инвентарь` +
+            //         ` ${inventory.device_type === 1 ? 'Лыжи' : 'Палки'}` +
+            //         ` №${inventory.device_number}`
+            // );
+            // console.log(props.choosePerson);
+            // console.log(inventory);
             navigate('/');
         }
     };
@@ -103,7 +118,13 @@ export default function Information({
                         <img
                             src={serachImg}
                             alt='search'
-                            onClick={() => props.toggleSearch()}
+                            onClick={() => {
+                                if (props.visibleSearch) {
+                                    props.toggleSearch(false);
+                                } else {
+                                    props.toggleSearch(true);
+                                }
+                            }}
                         />
                     </div>
                     {isPagePeopleList && (
@@ -125,16 +146,37 @@ export default function Information({
                         </div>
                     )}
                 </div>
-                <div>
-                    <div className={styles.content_line}>
-                        <div>Выдано: {props.given}</div>
-                        <div>На горе: {props.onMountain}</div>
+                {!isPagePeopleList && !isPageInventoryList && (
+                    <div>
+                        <div className={styles.content_line}>
+                            <div>Выдано: {props.given}</div>
+                            <div>На горе: {props.onMountain}</div>
+                        </div>
+                        <div className={styles.content_line}>
+                            <div>Поверхность: {props.onSurface}</div>
+                            <div>Нарушители: {props.violators}</div>
+                        </div>
                     </div>
-                    <div className={styles.content_line}>
-                        <div>Поверхность: {props.onSurface}</div>
-                        <div>Нарушители: {props.violators}</div>
+                )}
+                {isPagePeopleList && (
+                    <div>
+                        <div className={styles.content_line}>
+                            <div>
+                                Количество людей: {props.peopleList.length}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
+                {isPageInventoryList && (
+                    <div>
+                        <div className={styles.content_line}>
+                            <div>
+                                Количество инвентаря:{' '}
+                                {props.inventoryList.length}
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className={styles.time}>
                     <CustomDate setDateNow={props.setDateNow} />
                 </div>
@@ -168,7 +210,7 @@ export default function Information({
                     />
                 </div>
             )}
-            {props.visibleSearch ? (
+            {props.visibleSearch && (isPageInventory || isPagePeopleList) && (
                 <div className={styles.inputBlock}>
                     <select
                         onChange={(e) => props.setTypeFilter(e.target.value)}
@@ -181,27 +223,69 @@ export default function Information({
 
                         <option value='number'>Номер</option>
                     </select>
-                    {isPageInventory ? (
-                        <input
-                            onChange={(e) =>
-                                props.textFilterInventory(e.target.value)
-                            }
-                            type='text'
-                            value={props.textInventory}
-                            placeholder='Поиск...'
-                        />
-                    ) : (
-                        <input
-                            onChange={(e) => props.textFilter(e.target.value)}
-                            type='text'
-                            value={props.text}
-                            placeholder='Поиск...'
-                        />
-                    )}
+                    <input
+                        onChange={(e) =>
+                            props.textFilterInventory(e.target.value)
+                        }
+                        type='text'
+                        value={props.textInventory}
+                        placeholder='Поиск...'
+                    />
                 </div>
-            ) : null}
+            )}
+
+            {props.visibleSearch && isPageMain && (
+                <div className={styles.inputBlock}>
+                    <select
+                        onChange={(e) => props.setTypeFilter(e.target.value)}
+                    >
+                        <option value='all' defaultValue>
+                            Все поля
+                        </option>
+
+                        <option value='fio'>ФИО</option>
+
+                        <option value='number'>Номер</option>
+                        <option value='time'>Время</option>
+                        <option value='inventory'>Инвентарь</option>
+                    </select>
+                    <input
+                        onChange={(e) => props.textFilter(e.target.value)}
+                        type='text'
+                        value={props.text}
+                        placeholder='Поиск...'
+                    />
+                </div>
+            )}
+            {props.visibleSearch && isPageInventoryList && (
+                <div className={styles.inputBlock}>
+                    <select
+                        onChange={(e) => props.setTypeFilter(e.target.value)}
+                    >
+                        <option value='all' defaultValue>
+                            Все поля
+                        </option>
+
+                        <option value='fio'>ФИО</option>
+
+                        <option value='number'>Номер инвентаря</option>
+                        <option value='serial'>Серийный номер</option>
+                    </select>
+                    <input
+                        onChange={(e) =>
+                            props.textInventoryList(e.target.value)
+                        }
+                        type='text'
+                        value={props.textFilterInventoryList}
+                        placeholder='Поиск...'
+                    />
+                </div>
+            )}
+
+            {isAddPerson && <CustomWindow text='Пользователь добавлен' />}
             {isCardAddPerson && (
                 <CardAddPerson
+                    setIsAddPerson={setIsAddPerson}
                     createPeople={props.createPeople}
                     closeCard={() => setIsCardAddPerson(false)}
                 />

@@ -12,7 +12,9 @@ import {
     setVisibleInventory,
     setListVisableInventory,
     setEvent,
+    setTextAlert,
     createPeople,
+    textInventoryList,
 } from '../../redux/informationReducer';
 const mapStateToProps = (state) => {
     return {
@@ -22,11 +24,15 @@ const mapStateToProps = (state) => {
         violators: state.informationPage.violators,
         text: state.informationPage.textFilter,
         textInventory: state.informationPage.textFilterInventory,
+        textFilterInventoryList: state.informationPage.textFilterInventoryList,
         visibleSearch: state.informationPage.visibleSearch,
         visibleSetting: state.informationPage.visibleSetting,
         visibleInventory: state.informationPage.visibleInventory,
         choosePerson: state.informationPage.choosePerson,
         chooseInventory: state.informationPage.chooseInventory,
+        textAlert: state.informationPage.textAlert,
+        peopleList: state.informationPage.peopleList,
+        inventoryList: state.informationPage.inventoryList,
     };
 };
 
@@ -43,6 +49,8 @@ const InformationContainer = connect(mapStateToProps, {
     setEvent,
     createPeople,
     giveDevice,
+    setTextAlert,
+    textInventoryList,
 })(Information);
 
 export default InformationContainer;

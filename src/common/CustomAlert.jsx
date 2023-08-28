@@ -4,6 +4,12 @@ import styles from './CustomAlert.module.scss';
 export default function CustomAlert(props) {
     const acceptBtn = () => {
         props.closeAlert();
+        if (props.setIsAlertDelete) {
+            props.setIsAlertDelete(true);
+            setTimeout(() => {
+                props.setIsAlertDelete(false);
+            }, 4000);
+        }
         props.delete();
     };
     return (

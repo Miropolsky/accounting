@@ -63,7 +63,7 @@ export default function LineTableInventory(props) {
                 </>
             ) : (
                 <>
-                    <div className={styles.lineId}>{props.id}</div>
+                    <div className={styles.lineId}>{props.index}</div>
                     <div className={styles.lineNum}>
                         {props.el && props.el.people_id}
                     </div>

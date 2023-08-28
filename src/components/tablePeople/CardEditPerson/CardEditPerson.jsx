@@ -7,7 +7,7 @@ const CardEditPerson = (props) => {
     const saveBtn = (values) => {
         props.editPerson({ ...props.person, ...values });
         props.closeCard();
-        alert('Данные изменены');
+        props.setTextAlert('Данные изменены');
     };
     console.log(props.person);
     return (
@@ -45,21 +45,45 @@ const CardEditPerson = (props) => {
                                     id='firstname'
                                     name='firstname'
                                     placeholder='Имя'
-                                />
+                                >
+                                    {({ field }) => (
+                                        <input
+                                            className={styles.input}
+                                            {...field}
+                                            placeholder='Имя'
+                                        />
+                                    )}
+                                </Field>
                             </div>
                             <div className={styles.valueInfo}>
                                 <Field
                                     id='lastname'
                                     name='lastname'
                                     placeholder='Фамилия'
-                                />
+                                >
+                                    {({ field }) => (
+                                        <input
+                                            className={styles.input}
+                                            {...field}
+                                            placeholder='Фамилия'
+                                        />
+                                    )}
+                                </Field>
                             </div>
                             <div className={styles.valueInfo}>
                                 <Field
                                     id='middlename'
                                     name='middlename'
                                     placeholder='Отчество'
-                                />
+                                >
+                                    {({ field }) => (
+                                        <input
+                                            className={styles.input}
+                                            {...field}
+                                            placeholder='Фамилия'
+                                        />
+                                    )}
+                                </Field>
                             </div>
                         </div>
                     </div>

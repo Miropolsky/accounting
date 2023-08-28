@@ -10,6 +10,7 @@ import {
     receiveDevice,
     setCounterInfo,
     updateMainList,
+    setTextAlert,
 } from '../../redux/informationReducer';
 import { useEffect } from 'react';
 
@@ -40,6 +41,7 @@ const mapStateToProps = (state) => {
         timeNow: state.informationPage.timeNow,
         loadedMainList: state.informationPage.loadedMainList,
         peopleList: state.informationPage.peopleList,
+        textAlert: state.informationPage.textAlert,
     };
 };
 
@@ -52,6 +54,7 @@ const TableContainer = connect(mapStateToProps, {
     giveDevice,
     receiveDevice,
     setCounterInfo,
+    setTextAlert,
     updateMainList,
 })(TableContainerApi);
 

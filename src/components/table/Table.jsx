@@ -6,6 +6,7 @@ import styles from './Table.module.scss';
 import React, { useEffect, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 import CustomAlert from '../../common/CustomAlert';
+import { CustomWindow } from '../../common/CustomWindow';
 
 const Table = React.memo((props) => {
     // console.log(props.timeNow);
@@ -79,6 +80,14 @@ const Table = React.memo((props) => {
     }
     return (
         <div className={styles.container}>
+            {props.textAlert !== '' && (
+                <CustomWindow
+                    text={props.textAlert}
+                    setTextAlert={props.setTextAlert}
+                />
+            )}
+            {/* {isAlertPass && <CustomWindow text='Успешная сдача инвентаря' />}
+            {isAlertGive && <CustomWindow text='Инвентарь выдан' />} */}
             <div className={styles.content}>
                 <LineTable
                     titleSortList={props.titleSortList}
@@ -92,6 +101,7 @@ const Table = React.memo((props) => {
                 <div className={styles.card}>
                     {isCardPerson && (
                         <CardPerson
+                            setTextAlert={props.setTextAlert}
                             setEvent={props.setEvent}
                             giveDevice={props.giveDevice}
                             receiveDevice={props.receiveDevice}
@@ -107,6 +117,7 @@ const Table = React.memo((props) => {
                     )}
                     {isCardInventory && (
                         <CardInventory
+                            setTextAlert={props.setTextAlert}
                             setEvent={props.setEvent}
                             giveDevice={props.giveDevice}
                             receiveDevice={props.receiveDevice}
@@ -150,7 +161,7 @@ const Table = React.memo((props) => {
     );
 });
 
-const Row = (props) => {
+const Row = React.memo((props) => {
     const { data, index, style } = props;
     const { setChoose, openCardPerson, idCard, mainList, inventoryList } = data;
     const el = mainList[index];
@@ -194,6 +205,6 @@ const Row = (props) => {
             />
         </div>
     );
-};
+});
 
 export default Table;

@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './CardAddPerson.module.scss';
 import CustomButton from '../../../UI/CustomButton/CustomButton';
 import { Field, Form, Formik } from 'formik';
+import { CustomWindow } from '../../../common/CustomWindow';
 
 const CardAddPerson = (props) => {
     const acceptBtn = (values) => {
@@ -10,6 +11,10 @@ const CardAddPerson = (props) => {
             values.middleName,
             values.lastName
         );
+        props.setIsAddPerson(true);
+        setTimeout(() => {
+            props.setIsAddPerson(false);
+        }, 4000);
         props.closeCard();
     };
     return (
@@ -47,21 +52,45 @@ const CardAddPerson = (props) => {
                                     id='firstName'
                                     name='firstName'
                                     placeholder='Имя'
-                                />
+                                >
+                                    {({ field }) => (
+                                        <input
+                                            className={styles.input}
+                                            {...field}
+                                            placeholder='Имя'
+                                        />
+                                    )}
+                                </Field>
                             </div>
                             <div className={styles.valueInfo}>
                                 <Field
                                     id='lastName'
                                     name='lastName'
                                     placeholder='Фамилия'
-                                />
+                                >
+                                    {({ field }) => (
+                                        <input
+                                            className={styles.input}
+                                            {...field}
+                                            placeholder='Фамилия'
+                                        />
+                                    )}
+                                </Field>
                             </div>
                             <div className={styles.valueInfo}>
                                 <Field
                                     id='middleName'
                                     name='middleName'
                                     placeholder='Отчество'
-                                />
+                                >
+                                    {({ field }) => (
+                                        <input
+                                            className={styles.input}
+                                            {...field}
+                                            placeholder='Отчество'
+                                        />
+                                    )}
+                                </Field>
                             </div>
                         </div>
                     </div>

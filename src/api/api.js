@@ -22,7 +22,7 @@ const peopleApi = {
         });
     },
     editPerson(person) {
-        return instance.put(`people/${person.id}`, { ...person });
+        return instance.put(`people/`, { ...person });
     },
     getPeople() {
         return instance.get('people');
@@ -40,7 +40,10 @@ const peopleApi = {
         return instance.get('issued');
     },
     giveDevice(people_id, device_id) {
-        return instance.post('device_give', { people_id, device_id });
+        return instance.post('device_give', {
+            people_id: `${people_id}`,
+            device_id: `${device_id}`,
+        });
     },
     receiveDevice(people_id, device_id) {
         return instance.post('device_receive', { people_id, device_id });

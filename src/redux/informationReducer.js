@@ -17,7 +17,9 @@ const SET_CHOOSE_INVENTORY = 'SET_CHOOSE_INVENTORY';
 const SET_VISIBLE_INVENTORY = 'SET_VISIBLE_INVENTORY';
 const SET_LIST_INVENTORY = 'SET_LIST_INVENTORY';
 const SET_ISSUED = 'SET_ISSUED';
+const SET_TEXT_ALERT = 'SET_TEXT_ALERT';
 const SET_MAIN_LIST = 'SET_MAIN_LIST';
+const TEXT_FILTER_INVENTORY_LIST = 'TEXT_FILTER_INVENTORY_LIST';
 // const SET_GIVEN = 'SET_GIVEN';
 // const SET_MINE = 'SET_MINE';
 // const SET_OUT = 'SET_OUT';
@@ -25,6 +27,7 @@ const SET_EVENT = 'SET_EVENT';
 const UPDATE_MAIN_LIST = 'UPDATE_MAIN_LIST';
 
 const initialState = {
+    textAlert: '',
     given: 0,
     onMountain: 0,
     onSurface: 0,
@@ -34,6 +37,7 @@ const initialState = {
     loadedMainList: [],
     peopleList: [],
     loadedPeopleList: [],
+    loadedInventoryList: [],
     methodEvent: '',
     elEvent: '',
     filterList: [],
@@ -42,7 +46,7 @@ const initialState = {
     filterIssuedList: [],
     inventoryList: [],
     filterInventoryList: [],
-
+    textFilterInventoryList: '',
     textFilterInventory: '',
     chooseInventory: null,
     textFilter: '',
@@ -69,9 +73,10 @@ const textFilter = (text) => {
     };
 };
 
-const toggleSearch = () => {
+const toggleSearch = (boolean) => {
     return {
         type: TOGGLE_VISIBLE_SEARCH,
+        boolean,
     };
 };
 const toggleSetting = () => {
@@ -86,6 +91,12 @@ const textFilterInventory = (text) => {
         text,
     };
 };
+const textInventoryList = (text) => {
+    return {
+        type: TEXT_FILTER_INVENTORY_LIST,
+        text,
+    };
+};
 const offSetting = () => {
     return {
         type: OFF_VISIBLE_SIDE_MENU,
@@ -95,6 +106,13 @@ const setTypeFilter = (typeFilter) => {
     return {
         type: SET_TYPE_FILTER,
         typeFilter,
+    };
+};
+
+const setTextAlert = (text) => {
+    return {
+        type: SET_TEXT_ALERT,
+        text,
     };
 };
 
@@ -208,24 +226,9 @@ const informationReducer = (state = initialState, action) => {
         case UPDATE_MAIN_LIST: {
             return { ...state, mainList: state.loadedMainList };
         }
-        // case SET_GIVEN: {
-        //     return {
-        //         ...state,
-        //         given: action.given,
-        //     };
-        // }
-        // case SET_MINE: {
-        //     return {
-        //         ...state,
-        //         onMountain: action.onMountain,
-        //     };
-        // }
-        // case SET_OUT: {
-        //     return {
-        //         ...state,
-        //         onSurface: action.onSurface,
-        //     };
-        // }
+        case SET_TEXT_ALERT: {
+            return { ...state, textAlert: action.text };
+        }
         case SET_COUNTER_INFO: {
             let countGiven = 0;
             let countOnMountain = 0;
@@ -361,25 +364,25 @@ const informationReducer = (state = initialState, action) => {
                     loadedMainList: newMas,
                 };
             }
-            if (action.methodEvent === 'device_give') {
-                let newMas = [...state.loadedMainList];
-                console.log('GIVE');
-                let el = findInventory(+action.event.device_id);
+            // if (action.methodEvent === 'device_give') {
+            //     let newMas = [...state.loadedMainList];
+            //     console.log('GIVE');
+            //     let el = findInventory(+action.event.device_id);
 
-                newMas.unshift({
-                    ...el,
-                    id: 0,
-                    datetime: new Date(),
-                });
-                newMas = newMas.map((el, i) => {
-                    return { ...el, id: i };
-                });
-                return {
-                    ...state,
-                    // mainList: newMas,
-                    loadedMainList: newMas,
-                };
-            }
+            //     newMas.unshift({
+            //         ...el,
+            //         id: 0,
+            //         datetime: new Date(),
+            //     });
+            //     newMas = newMas.map((el, i) => {
+            //         return { ...el, id: i };
+            //     });
+            //     return {
+            //         ...state,
+            //         // mainList: newMas,
+            //         loadedMainList: newMas,
+            //     };
+            // }
             if (action.methodEvent === 'people') {
                 let isEditPeople = false;
                 let isEditMainList = false;
@@ -461,6 +464,12 @@ const informationReducer = (state = initialState, action) => {
                     `${user.device_id}`.includes(action.text)
                 );
             }
+            if (state.typeFilter === 'inventory') {
+                console.log(state.loadedMainList);
+                filterList = state.loadedMainList.filter((user) =>
+                    `${user.device_id}`.includes(action.text)
+                );
+            }
             if (action.text === '') {
                 filterList = state.loadedMainList;
             }
@@ -505,12 +514,68 @@ const informationReducer = (state = initialState, action) => {
                 textFilterInventory: action.text,
                 peopleList: [...filterListInventory],
             };
+        case TEXT_FILTER_INVENTORY_LIST:
+            function findPeopleInListPeople(people_id) {
+                const invent = state.loadedPeopleList.find(
+                    (el) => el.people_id === people_id
+                );
+                return invent;
+            }
+            let filterListInventoryList;
+            if (state.typeFilter === 'fio') {
+                filterListInventoryList = state.loadedInventoryList.filter(
+                    (el) => {
+                        let nameUser = 'Не закреплен';
+                        if (el.people_id) {
+                            let user = findPeopleInListPeople(el.people_id);
+                            if (user) {
+                                nameUser = `${user.lastname} ${user.firstname} ${user.middlename}`;
+                            }
+                        }
+                        return nameUser.includes(action.text);
+                    }
+                );
+            }
+            if (state.typeFilter === 'all') {
+                filterListInventoryList = state.loadedInventoryList.filter(
+                    (el) => {
+                        let nameUser = 'Не закреплен';
+                        if (el.people_id) {
+                            let user = findPeopleInListPeople(el.people_id);
+                            if (user) {
+                                nameUser = `${user.lastname} ${user.firstname} ${user.middlename}`;
+                            }
+                        }
+                        let allValue = `${nameUser} ${el.device_id} ${el.device_serial}`;
+                        return allValue.includes(action.text);
+                    }
+                );
+            }
+            if (state.typeFilter === 'number') {
+                filterListInventoryList = state.loadedInventoryList.filter(
+                    (user) => `${user.device_id}`.includes(action.text)
+                );
+            }
+            if (state.typeFilter === 'serial') {
+                filterListInventoryList = state.loadedInventoryList.filter(
+                    (user) => `${user.device_serial}`.includes(action.text)
+                );
+            }
+            if (action.text === '') {
+                filterListInventoryList = state.loadedInventoryList;
+            }
+
+            return {
+                ...state,
+                textFilterInventoryList: action.text,
+                inventoryList: [...filterListInventoryList],
+            };
         case TOGGLE_VISIBLE_SEARCH:
             return {
                 ...state,
                 mainList: [...state.loadedMainList],
                 peopleList: [...state.peopleList],
-                visibleSearch: !state.visibleSearch,
+                visibleSearch: action.boolean,
                 textFilter: '',
                 textFilterInventory: '',
             };
@@ -708,6 +773,7 @@ const informationReducer = (state = initialState, action) => {
             return {
                 ...state,
                 inventoryList: action.inventory,
+                loadedInventoryList: action.inventory,
             };
         }
         case SET_MAIN_LIST: {
@@ -751,6 +817,7 @@ const getIssued = () => {
 const giveDevice = (people_id, device_id) => {
     return async (dispatch) => {
         let res = await peopleApi.giveDevice(people_id, device_id);
+        getMainList()(dispatch);
     };
 };
 const receiveDevice = (people_id, device_id) => {
@@ -762,6 +829,7 @@ const receiveDevice = (people_id, device_id) => {
 const deletePeople = (id) => {
     return async (dispatch) => {
         let res = await peopleApi.deletePeople(id);
+        getPeople()(dispatch);
     };
 };
 
@@ -859,8 +927,10 @@ export {
     setListVisableInventory,
     getInventory,
     getIssued,
+    setTextAlert,
     setChooseInventory,
     setEvent,
     updateMainList,
     deletePeople,
+    textInventoryList,
 };

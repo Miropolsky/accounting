@@ -6,6 +6,7 @@ import {
     getPeople,
     deletePeople,
     editPerson,
+    setTextAlert,
 } from '../../redux/informationReducer';
 
 const TablePeopleContainerApi = (props) => {
@@ -16,6 +17,7 @@ const mapStateToProps = (state) => {
     return {
         visibleSearch: state.informationPage.visibleSearch,
         peopleList: state.informationPage.peopleList,
+        textAlert: state.informationPage.textAlert,
     };
 };
 
@@ -25,6 +27,7 @@ const TablePeopleContainer = connect(mapStateToProps, {
     getPeople,
     editPerson,
     deletePeople,
+    setTextAlert,
 })(TablePeopleContainerApi);
 
 export default TablePeopleContainer;

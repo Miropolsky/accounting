@@ -14,7 +14,7 @@ const CardPerson = (props) => {
         //         device_id: props.inventory[0].device_id,
         //     },
         // });
-        alert('Успешная сдача');
+        props.setTextAlert('Успешная сдача инвентаря');
         props.closeCard();
     };
 

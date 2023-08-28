@@ -26,21 +26,24 @@
             margin-right: 10px;
             width: 150px;
             font-size: 16px;
+            padding-left: 5px;
         }
         input{
+            padding-left: 5px;
             height: 45px;
             width: 100%;
             outline: none;
         }
         input::placeholder {
             font-size: 16px;
-            padding-left: 5px;
+            // padding-left: 5px;
         }
     }
     .content{
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 100px;
         .searchBlock{
             display: flex;
             align-items: center;

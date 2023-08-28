@@ -30,6 +30,7 @@ export default function LineTablePeople(props) {
         >
             {isConfirm && (
                 <CustomAlert
+                    setIsAlertDelete={props.setIsAlertDelete}
                     text='Вы точно хотите удалить пользователя?'
                     closeAlert={() => setIsConfirm(false)}
                     delete={() => props.deletePeople(changePerson)}
@@ -76,7 +77,9 @@ export default function LineTablePeople(props) {
                 </>
             ) : (
                 <>
-                    <div className={styles.lineId}>{props.el.id}</div>
+                    <div className={styles.lineId}>
+                        {props.elId ? props.elId : '0'}
+                    </div>
                     <div className={styles.lineNum}>
                         {props.el && props.el.people_id}
                     </div>

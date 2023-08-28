@@ -71,6 +71,7 @@ const Row = (props) => {
             }}
         >
             <LineTableInventory
+                index={index}
                 setChoosePerson={setChoosePerson}
                 setChoose={setChoose}
                 tableList={peopleList}

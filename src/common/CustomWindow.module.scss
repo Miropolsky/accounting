@@ -1,0 +1,30 @@
+.main{
+    position: absolute;
+    top: 8%;
+    right: 1%;
+    height: 10%;
+    width: 20%;
+    background-color: rgb(225, 225, 225);
+    z-index: 10000;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    font-weight: bold;
+    opacity: 0;
+    animation: opacity 4s ease-in-out;
+    // display: none;
+    // color: white;    
+}
+
+@keyframes opacity {
+    from{
+        // display:block;
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+        display: none;
+    }
+}

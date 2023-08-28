@@ -5,9 +5,11 @@ import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import CustomButton from '../../UI/CustomButton/CustomButton';
 import CardEditPerson from './CardEditPerson/CardEditPerson';
+import { CustomWindow } from '../../common/CustomWindow';
 
 export default function TablePeople(props) {
     const [customHeight, setCustomHeight] = useState(250);
+    const [isAlertDelete, setIsAlertDelete] = useState(false);
     const [isCardEdit, setIsCardEdit] = useState(false);
     const [chooseUser, setChooseUser] = useState({});
     const closeCardEdit = () => {
@@ -28,6 +30,12 @@ export default function TablePeople(props) {
     }, [props.visibleSearch]);
     return (
         <div className={styles.container}>
+            {props.textAlert !== '' && (
+                <CustomWindow
+                    text={props.textAlert}
+                    setTextAlert={props.setTextAlert}
+                />
+            )}
             {/* <div className={styles.btns}>
                 <CustomButton
                     width={'130px'}
@@ -44,6 +52,7 @@ export default function TablePeople(props) {
             </div> */}
             {isCardEdit && (
                 <CardEditPerson
+                    setTextAlert={props.setTextAlert}
                     closeCard={closeCardEdit}
                     person={chooseUser}
                     editPerson={props.editPerson}
@@ -51,6 +60,7 @@ export default function TablePeople(props) {
             )}
             <div className={styles.content}>
                 <LineTablePeople
+                    // setIsAlertDelete={setIsAlertDelete}
                     titleSortListInventory={props.titleSortListInventory}
                     id='№'
                     num='Индивидуальный номер'
@@ -65,6 +75,7 @@ export default function TablePeople(props) {
                                 peopleList: props.peopleList,
                                 openCardEdit: openCardEdit,
                                 deletePeople: props.deletePeople,
+                                setIsAlertDelete: setIsAlertDelete,
                             }}
                             itemSize={50}
                             width={width}
@@ -80,14 +91,16 @@ export default function TablePeople(props) {
 
 const Row = (props) => {
     const { data, index, style } = props;
-    const { peopleList, openCardEdit, deletePeople } = data;
+    const { peopleList, openCardEdit, deletePeople, setIsAlertDelete } = data;
     const el = peopleList[index];
     const nameUser = `${el.lastname} ${el.firstname} ${el.middlename}`;
     return (
         <div style={style} onDoubleClick={() => openCardEdit(el)}>
             <LineTablePeople
+                setIsAlertDelete={setIsAlertDelete}
                 key={el.people_id}
                 el={el}
+                elId={index}
                 nameUser={nameUser}
                 deletePeople={deletePeople}
             />

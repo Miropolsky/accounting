@@ -79,7 +79,7 @@ const CardInventory = (props) => {
                 {!props.isIssued.length ? (
                     <CustomButton
                         onClick={() => {
-                            alert(
+                            props.setTextAlert(
                                 `${assignedPerson.lastname} ${assignedPerson.firstname} ${assignedPerson.middlename} получил ` +
                                     `${
                                         props.el.device_type === 1
@@ -88,6 +88,11 @@ const CardInventory = (props) => {
                                     }` +
                                     ` №${props.el.device_number}`
                             );
+
+                            // props.setIsAlertGive(true);
+                            // setTimeout(() => {
+                            //     props.setIsAlertGive(false);
+                            // }, 4000);
                             props.giveDevice(
                                 assignedPerson.people_id,
                                 props.el.device_id
@@ -98,13 +103,13 @@ const CardInventory = (props) => {
                         text='Выдать'
                         width={'25%'}
                         height={50}
-                        color='#50F255'
+                        color={assignedPerson ? '#50F255' : '#E8E8E8'}
                     />
                 ) : (
                     <CustomButton
                         onClick={() => {
                             if (assignedPerson) {
-                                alert(
+                                props.setTextAlert(
                                     `${assignedPerson.lastname} ${assignedPerson.firstname} ${assignedPerson.middlename} сдал ` +
                                         `${
                                             props.el.device_type === 1
@@ -114,7 +119,7 @@ const CardInventory = (props) => {
                                         ` №${props.el.device_number}`
                                 );
                             } else {
-                                alert(
+                                props.setTextAlert(
                                     `инвентарь ${
                                         props.el.device_type === 1
                                             ? 'Лыжи'

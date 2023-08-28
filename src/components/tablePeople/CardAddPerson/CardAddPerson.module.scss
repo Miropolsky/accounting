@@ -26,6 +26,11 @@
         font-size: 18px;
         .namesInfo{
             width: 120px;
+            
+            .nameInfo{
+                margin-top: 5px;
+                height: 28px;
+            }
         }
         .valuesInfo{
             margin-left: 80px;
@@ -40,6 +45,28 @@
         justify-content: space-between;
         margin-bottom: 20px;
     }
+}
+
+.input{
+    padding-left: 5px;
+    height: 23px;
+    margin-top: 5px;
+    background-color: #fff;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    background-clip: padding-box;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    &::placeholder {
+        color: #212529;
+        opacity: 0.4;
+    }
+    &:focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #bdbdbd;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
+      }
 }
 
 @media only screen and (max-device-width: 500px) {
