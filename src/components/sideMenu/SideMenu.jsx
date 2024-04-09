@@ -45,7 +45,7 @@ export default function SideMenu({
     };
     return (
         <div className={styles.container}>
-            <div className={styles.title}>Отображать инвентарь</div>
+            <div className={styles.title}>Отображение инвентаря</div>
             <div className={styles.choose}>
                 <label className={styles.labelChoose}>
                     <input
@@ -89,6 +89,7 @@ export default function SideMenu({
                     </div>
                 )}
             </div>
+            <div className={styles.lineGray}></div>
             <div className={styles.blockBtn}>
                 <button className={styles.btn} onClick={() => acceptBtn()}>
                     Применить

@@ -86,11 +86,12 @@
 @media only screen and (max-device-width: 500px) {
     .container{
         span{
-            font-size: 13px;
+            font-size: 10px;
         }
         width: 100%;
-        font-size: 12px;
+        font-size: 10px;
         .lineId{
+            font-size: 10px;
             text-align: center;
             width: 50px;
         }
@@ -101,11 +102,11 @@
         
         .lineNum{
             text-align: center;
-            width: 120px;
+            width: 100px;
         }
         .lineInventory{
             text-align: center;
-            width: calc(100% - 340px);
+            width: calc(100% - 320px);
         }
         
         .lineName{

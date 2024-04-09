@@ -21,6 +21,12 @@ const peopleApi = {
             personnel: null,
         });
     },
+    addDevice(device_type, device_number) {
+        return instance.post('device', {
+            device_type,
+            device_number,
+        });
+    },
     editPerson(person) {
         return instance.put(`people/`, { ...person });
     },
@@ -32,6 +38,9 @@ const peopleApi = {
     },
     deletePeople(id) {
         return instance.delete(`people/${id}`);
+    },
+    deleteDevice(id) {
+        return instance.delete(`device/${id}`);
     },
     getDevice() {
         return instance.get('device');

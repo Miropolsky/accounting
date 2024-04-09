@@ -292,6 +292,7 @@ export default function Information({
             )}
             {isCardAddInventory && (
                 <CardAddInventory
+                    addDevice={props.addDevice}
                     closeCard={() => setIsCardAddInventory(false)}
                 />
             )}

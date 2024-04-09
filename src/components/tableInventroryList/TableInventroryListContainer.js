@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import TableInventroryList from './TableInventroryList';
+import {
+    titleSortListInventoryL,
+    deleteDevice,
+} from '../../redux/informationReducer.js';
 
 const TableInventoryListContainerApi = (props) => {
     useEffect(() => {
@@ -17,9 +21,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-const TableInventoryListContainer = connect(
-    mapStateToProps,
-    {}
-)(TableInventoryListContainerApi);
+const TableInventoryListContainer = connect(mapStateToProps, {
+    titleSortListInventoryL,
+    deleteDevice,
+})(TableInventoryListContainerApi);
 
 export default TableInventoryListContainer;

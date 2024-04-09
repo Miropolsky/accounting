@@ -3,9 +3,20 @@ import styles from './TableInventroryList.module.scss';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import LineTableInventroryList from './LineTableTableInventroryList/LineTableInventroryList';
+import CardEditInventory from './CardEditInventory/CardEditInventory';
 
 export default function TableInventroryList(props) {
     const [customHeight, setCustomHeight] = useState(250);
+    const [isCardEdit, setIsCardEdit] = useState(false);
+    const [chooseInventory, setChooseInventory] = useState({});
+    const closeCardEdit = () => {
+        setIsCardEdit(false);
+        setChooseInventory({});
+    };
+    const openCardEdit = (invent) => {
+        setChooseInventory(invent);
+        setIsCardEdit(true);
+    };
     useEffect(() => {
         if (props.visibleSearch) {
             setCustomHeight(270);
@@ -18,13 +29,19 @@ export default function TableInventroryList(props) {
         <div className={styles.container}>
             <div className={styles.content}>
                 <LineTableInventroryList
-                    titleSortList={() => alert('sad')}
+                    titleSortListInventoryL={props.titleSortListInventoryL}
                     id='№'
                     num='Индивидуальный номер'
                     number='Номер инвентаря'
                     name='Инвентарь'
                     peopleId='Закрепленный пользователь'
                 />
+                {isCardEdit && (
+                    <CardEditInventory
+                        closeCardEdit={closeCardEdit}
+                        chooseInventory={chooseInventory}
+                    />
+                )}
                 <AutoSizer>
                     {({ height, width }) => (
                         <FixedSizeList
@@ -33,6 +50,8 @@ export default function TableInventroryList(props) {
                             itemData={{
                                 inventoryList: props.inventoryList,
                                 peopleList: props.peopleList,
+                                deleteDevice: props.deleteDevice,
+                                openCardEdit: openCardEdit,
                             }}
                             itemSize={50}
                             width={width}
@@ -48,7 +67,7 @@ export default function TableInventroryList(props) {
 
 const Row = (props) => {
     const { data, index, style } = props;
-    const { inventoryList, peopleList } = data;
+    const { inventoryList, peopleList, deleteDevice, openCardEdit } = data;
     const el = inventoryList[index];
     function findPeopleInListPeople(people_id) {
         const invent = peopleList.find((el) => el.people_id === people_id);
@@ -63,12 +82,16 @@ const Row = (props) => {
     }
 
     return (
-        <div style={style}>
+        <div
+            style={style}
+            onDoubleClick={() => openCardEdit({ ...el, nameUser })}
+        >
             <LineTableInventroryList
                 key={el.people_id}
                 id={index}
                 el={el}
                 nameUser={nameUser}
+                deleteDevice={deleteDevice}
             />
         </div>
     );

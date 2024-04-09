@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './LineTablePeople.module.scss';
 import deleteUser from '../../../assets/img/deleteUser.svg';
-import CustomAlert from '../../../common/CustomAlert';
+import CustomAlert from './../../../common/CustomAlert';
 
 export default function LineTablePeople(props) {
     const [reverseId, setReverseId] = useState(false);

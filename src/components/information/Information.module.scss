@@ -156,16 +156,30 @@
                 z-index: 10001;
                 margin-left: 15px;
                 .searchImg{
-                    margin-top: 15px;
+                    margin-top: 5px;
                     img{
-                        width: 24px;
-                        height: 24px;
+                        width: 20px;
+                        height: 20px;
                     }
                 }
                 .settingImg{
                     img{
-                        width: 24px;
-                        height: 24px;
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+                .addPeople{
+                    img{
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                    }
+                }
+                .addInventory{
+                    img{
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
                     }
                 }
             }
@@ -173,12 +187,12 @@
                 display: flex;
                 font-size: 14px;
                 justify-content: flex-end;
-                width: 80px;
+                width: 40px;
                 margin-right: 5px;
                 color: white;
             }
             .content_line{
-                width: 280px;
+                width: 250px;
                 margin-top: 20px;
                 column-gap: 10px;
                 color: white;

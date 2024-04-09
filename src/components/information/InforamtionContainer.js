@@ -14,6 +14,7 @@ import {
     setEvent,
     setTextAlert,
     createPeople,
+    addDevice,
     textInventoryList,
 } from '../../redux/informationReducer';
 const mapStateToProps = (state) => {
@@ -48,6 +49,7 @@ const InformationContainer = connect(mapStateToProps, {
     setListVisableInventory,
     setEvent,
     createPeople,
+    addDevice,
     giveDevice,
     setTextAlert,
     textInventoryList,

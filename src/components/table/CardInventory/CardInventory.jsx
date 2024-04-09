@@ -30,7 +30,7 @@ const CardInventory = (props) => {
             <div className={styles.lineGray}></div>
             <div className={styles.inventory}>
                 <div className={styles.namesInfo}>
-                    <div className={styles.nameInfo}>Номер</div>
+                    <div className={styles.nameInfo}>Номер инвентаря</div>
                     <div className={styles.nameInfo}>Инвентарь</div>
                     {/* <div className={styles.nameInfo}>Полный комплект</div> */}
                 </div>
@@ -45,36 +45,48 @@ const CardInventory = (props) => {
                 </div>
             </div>
             <div className={styles.lineGray}></div>
-            <div className={styles.infoPerson}>
-                <div className={styles.namesInfo}>
-                    <div className={styles.nameInfo}>Фамилия</div>
-                    <div className={styles.nameInfo}>Имя</div>
-                    <div className={styles.nameInfo}>Отчество</div>
-                    <div className={styles.nameInfo}>Уникальный номер</div>
+            {props.el.people_id ? (
+                <>
+                    {' '}
+                    <div className={styles.infoPerson}>
+                        <div className={styles.namesInfo}>
+                            <div className={styles.nameInfo}>Фамилия</div>
+                            <div className={styles.nameInfo}>Имя</div>
+                            <div className={styles.nameInfo}>Отчество</div>
+                            <div className={styles.nameInfo}>
+                                Уникальный номер
+                            </div>
+                        </div>
+                        <div className={styles.valuesInfo}>
+                            <div className={styles.valueInfo}>
+                                {assignedPerson
+                                    ? `${assignedPerson.lastname}`
+                                    : 'Не закреплен'}
+                            </div>
+                            <div className={styles.valueInfo}>
+                                {assignedPerson
+                                    ? `${assignedPerson.firstname}`
+                                    : 'Не закреплен'}
+                            </div>
+                            <div className={styles.valueInfo}>
+                                {assignedPerson
+                                    ? `${assignedPerson.middlename}`
+                                    : 'Не закреплен'}
+                            </div>
+                            <div className={styles.valueInfo}>
+                                {props.el.people_id
+                                    ? props.el.people_id
+                                    : 'Не закреплен'}
+                            </div>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <div className={styles.infoPeople}>
+                    Пользователь не закреплен
                 </div>
-                <div className={styles.valuesInfo}>
-                    <div className={styles.valueInfo}>
-                        {assignedPerson
-                            ? `${assignedPerson.lastname}`
-                            : 'Не закреплен'}
-                    </div>
-                    <div className={styles.valueInfo}>
-                        {assignedPerson
-                            ? `${assignedPerson.firstname}`
-                            : 'Не закреплен'}
-                    </div>
-                    <div className={styles.valueInfo}>
-                        {assignedPerson
-                            ? `${assignedPerson.middlename}`
-                            : 'Не закреплен'}
-                    </div>
-                    <div className={styles.valueInfo}>
-                        {props.el.people_id
-                            ? props.el.people_id
-                            : 'Не закреплен'}
-                    </div>
-                </div>
-            </div>
+            )}
+
             <div className={styles.buttons}>
                 {!props.isIssued.length ? (
                     <CustomButton

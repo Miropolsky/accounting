@@ -19,6 +19,7 @@ const SET_LIST_INVENTORY = 'SET_LIST_INVENTORY';
 const SET_ISSUED = 'SET_ISSUED';
 const SET_TEXT_ALERT = 'SET_TEXT_ALERT';
 const SET_MAIN_LIST = 'SET_MAIN_LIST';
+const SORT_LIST_INVENTORY_L = 'SORT_LIST_INVENTORY_L';
 const TEXT_FILTER_INVENTORY_LIST = 'TEXT_FILTER_INVENTORY_LIST';
 // const SET_GIVEN = 'SET_GIVEN';
 // const SET_MINE = 'SET_MINE';
@@ -145,6 +146,13 @@ const titleSortList = (title, isReverse = false) => {
 const titleSortListInventory = (title, isReverse = false) => {
     return {
         type: SORT_LIST_INVENTORY,
+        title,
+        isReverse,
+    };
+};
+const titleSortListInventoryL = (title, isReverse = false) => {
+    return {
+        type: SORT_LIST_INVENTORY_L,
         title,
         isReverse,
     };
@@ -437,6 +445,16 @@ const informationReducer = (state = initialState, action) => {
             };
         }
         case TEXT_FILTER:
+            function findInventoryInInventoryList(deveiceId) {
+                let invent = '';
+                let findInvent = state.loadedInventoryList.find(
+                    (el) => el.device_id === deveiceId
+                );
+                if (findInvent) {
+                    invent = findInvent;
+                }
+                return invent;
+            }
             let filterList;
             if (state.typeFilter === 'fio') {
                 filterList = state.loadedMainList.filter((el) => {
@@ -453,9 +471,14 @@ const informationReducer = (state = initialState, action) => {
                     if (el.person) {
                         fullName = `${el.person.lastname} ${el.person.firstname} ${el.person.middlename}`;
                     }
+
+                    let invent = findInventoryInInventoryList(el.device_id);
+                    let curInvent = `${
+                        invent.device_type ? 'Лыжи' : 'Палки'
+                    } №${invent.device_serial}`;
                     let allValue = `${fullName} ${parseDateTime(el.datetime)} ${
                         el.device_id
-                    }`;
+                    } ${curInvent}`;
                     return allValue.includes(action.text);
                 });
             }
@@ -464,11 +487,18 @@ const informationReducer = (state = initialState, action) => {
                     `${user.device_id}`.includes(action.text)
                 );
             }
-            if (state.typeFilter === 'inventory') {
-                console.log(state.loadedMainList);
-                filterList = state.loadedMainList.filter((user) =>
-                    `${user.device_id}`.includes(action.text)
+            if (state.typeFilter === 'time') {
+                filterList = state.loadedMainList.filter((el) =>
+                    `${parseDateTime(el.datetime)}`.includes(action.text)
                 );
+            }
+            if (state.typeFilter === 'inventory') {
+                filterList = state.loadedMainList.filter((user) => {
+                    let invent = findInventoryInInventoryList(user.device_id);
+                    return `${invent.device_type ? 'Лыжи' : 'Палки'} №${
+                        invent.device_serial
+                    }`.includes(action.text);
+                });
             }
             if (action.text === '') {
                 filterList = state.loadedMainList;
@@ -610,14 +640,14 @@ const informationReducer = (state = initialState, action) => {
                 );
             }
             if (action.title === 'number') {
-                sortList.sort((a, b) => a.people_id - b.people_id);
+                sortList.sort((a, b) => a.device_id - b.device_id);
             }
             if (action.title === 'inventory') {
                 sortList.sort((a, b) => {
                     let inventA = a.device_type === 1 ? 'Лыжи' : 'Палки';
-                    inventA += ` ${a.device_number}`;
+                    inventA += ` ${a.device_serial}`;
                     let inventB = b.device_type === 1 ? 'Лыжи' : 'Палки';
-                    inventB += ` ${b.device_number}`;
+                    inventB += ` ${b.device_serial}`;
                     return inventA.localeCompare(inventB);
                 });
             }
@@ -686,6 +716,63 @@ const informationReducer = (state = initialState, action) => {
             return {
                 ...state,
                 peopleList: [...sortList],
+            };
+        }
+        case SORT_LIST_INVENTORY_L: {
+            let sortList = state.loadedInventoryList
+                ? state.inventoryList
+                : state.loadedInventoryList;
+            // if (action.title === 'number') {
+            //     sortList.sort((a, b) => a.device_id - b.device_id);
+            // }
+            if (action.title === 'inventory') {
+                sortList.sort((a, b) => {
+                    let inventA = a.device_type === 1 ? 'Лыжи' : 'Палки';
+                    // inventA += ` ${a.device_serial}`;
+                    let inventB = b.device_type === 1 ? 'Лыжи' : 'Палки';
+                    // inventB += ` ${b.device_serial}`;
+                    return inventA.localeCompare(inventB);
+                });
+            }
+            if (action.title === 'number') {
+                sortList.sort((a, b) => a.device_id - b.device_id);
+            }
+            if (action.title === 'numberInventory') {
+                sortList.sort((a, b) => a.device_serial - b.device_serial);
+            }
+            if (action.title === 'fio') {
+                sortList.sort((a, b) => {
+                    function findPeopleInListPeople(people_id) {
+                        const invent = state.loadedPeopleList.find(
+                            (el) => el.people_id === people_id
+                        );
+                        return invent;
+                    }
+                    let firstName = findPeopleInListPeople(a.people_id);
+                    let secondName = findPeopleInListPeople(b.people_id);
+                    if (firstName === undefined) {
+                        firstName = 'ЯЯЯЯ';
+                    } else {
+                        firstName =
+                            `${firstName.lastname} ${firstName.firstname} ${firstName.middlename}`.trim();
+                    }
+                    if (secondName === undefined) {
+                        secondName = 'ЯЯЯЯ';
+                    } else {
+                        secondName =
+                            `${secondName.lastname} ${secondName.firstname} ${secondName.middlename}`.trim();
+                    }
+
+                    return firstName.localeCompare(secondName);
+                });
+            }
+
+            if (action.isReverse) {
+                sortList.reverse();
+            }
+            return {
+                ...state,
+                inventoryList: [...sortList],
             };
         }
         case SET_CHOOSE_PERSON: {
@@ -832,6 +919,12 @@ const deletePeople = (id) => {
         getPeople()(dispatch);
     };
 };
+const deleteDevice = (id) => {
+    return async (dispatch) => {
+        let res = await peopleApi.deleteDevice(id);
+        getInventory()(dispatch);
+    };
+};
 
 const createPeople = (firstName, middleName, secondName) => {
     return async (dispatch) => {
@@ -839,10 +932,17 @@ const createPeople = (firstName, middleName, secondName) => {
         getPeople()(dispatch);
     };
 };
+const addDevice = (device_type, device_number) => {
+    return async (dispatch) => {
+        console.log(device_type, device_number);
+        let res = await peopleApi.addDevice(device_type, device_number);
+        getInventory()(dispatch);
+    };
+};
 const editPerson = (person) => {
     return async (dispatch) => {
         let res = await peopleApi.editPerson(person);
-        // getPeople()(dispatch);
+        getPeople()(dispatch);
     };
 };
 
@@ -908,6 +1008,7 @@ export {
     getMainList,
     informationReducer,
     toggleSearch,
+    deleteDevice,
     toggleSetting,
     offSetting,
     giveDevice,
@@ -933,4 +1034,6 @@ export {
     updateMainList,
     deletePeople,
     textInventoryList,
+    titleSortListInventoryL,
+    addDevice,
 };
